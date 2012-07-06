@@ -4,6 +4,10 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+
 /**
  * Test-class for {@link ArtNetSender}.
  */
@@ -53,7 +57,27 @@ public class ArtNetSenderTest extends TestCase {
 
     public void testUniverse2() {
         artNetSender.setUniverse(2);
-        assertEquals("Sub-Net is not 2", 2, artNetSender.getUniverse());
+        assertEquals("Universe is not 2", 2, artNetSender.getUniverse());
+    }
+
+    public void testPortAddress() {
+        assertEquals("Port Address is not 32767", 32767, artNetSender.getPortAddress());
+    }
+
+    public void testPortAddress2() {
+        artNetSender.setPortAddress(2);
+        assertEquals("Port Address is not 2", 2, artNetSender.getUniverse());
+    }
+
+    public void testInetAddress() throws UnknownHostException, SocketException {
+        InetAddress inetAddress = InetAddress.getLocalHost();
+        artNetSender.setInetAddress(inetAddress);
+        assertEquals("InetAddress does not match provided InetAddress", inetAddress, artNetSender.getInetAddress());
+    }
+
+    public void testInetAddressNotNull() throws UnknownHostException, SocketException {
+        artNetSender.setInetAddress(null);
+        assertNotNull("InetAddress is null", artNetSender.getInetAddress());
     }
 
     public void testToString() {
