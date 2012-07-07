@@ -7,11 +7,7 @@ import tc.vom.artNetLighter.infrastructure.constants.ArtNetStyleCodes;
 import static tc.vom.artNetLighter.infrastructure.ArtNetToolkit.copyToArray;
 
 /**
- * Created with IntelliJ IDEA.
- * User: matthias
- * Date: 06.07.12
- * Time: 16:25
- * To change this template use File | Settings | File Templates.
+ * Used to hold the data of an ArtPollReply-Packet.
  */
 public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtNetNodeReportCodes {
 
@@ -147,7 +143,7 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
      * - 6 Set – Channel includes DMX512 test packets.
      * - 5 Set – Channel includes DMX512 SIP’s.
      * - 4 Set – Channel includes DMX512 text packets.
-     * - 3 Set – ”utput is merging ArtNet data.
+     * - 3 Set – Output is merging ArtNet data.
      * - 2 Set – DMX output short detected on power up
      * - 1 Set – Merge Mode is LTP.
      * - 0 Unused and transmitted as zero.

@@ -41,6 +41,6 @@ public class ArtNetPacketTest {
 
     @Test
     public void testConstructPacket2() throws Exception {
-        assertArrayEquals("constructPacket(HEADER_LENGTH, OP_POLL) should generate a valif OP_POLL header", new byte[]{'A', 'r', 't', '-', 'N', 'e', 't', 0, ArtNetOpCodes.OP_CODE_POLL & 0xff, (ArtNetOpCodes.OP_CODE_POLL >> 8) & 0xff}, ArtNetPacket.constructPacket(ArtNetPacket.HEADER_LENGTH, ArtNetOpCodes.OP_CODE_POLL));
+        assertArrayEquals("constructPacket(HEADER_LENGTH, OP_POLL) should generate a valid OP_POLL header", new byte[]{'A', 'r', 't', '-', 'N', 'e', 't', 0, ArtNetOpCodes.OP_CODE_POLL & 0xff, (ArtNetOpCodes.OP_CODE_POLL >> 8) & 0xff}, ArtNetPacket.constructPacket(ArtNetPacket.HEADER_LENGTH, ArtNetOpCodes.OP_CODE_POLL));
     }
 }

@@ -197,11 +197,11 @@ public class ArtNetToolkit {
         }
     }
 
-    public static void copyToArray(byte[] src, byte[] dest, int offset) {
-        System.arraycopy(src, 0, dest, offset, src.length);
+    public static void copyToArray(byte[] from, byte[] to, int offset) {
+        System.arraycopy(from, 0, to, offset, from.length);
     }
 
-    public static <T> void copyToArray(T[] src, T[] dest, int offset) {
-        System.arraycopy(src, 0, dest, offset, src.length);
+    public static <T> void copyToArray(T[] from, T[] to, int offset) {
+        System.arraycopy(from, 0, to, offset, from.length);
     }
 }

@@ -1,11 +1,7 @@
 package tc.vom.artNetLighter.infrastructure.constants;
 
 /**
- * Created with IntelliJ IDEA.
- * User: matthias
- * Date: 07.07.12
- * Time: 17:35
- * To change this template use File | Settings | File Templates.
+ * Contains the Art-Net Style Codes used by {@link tc.vom.artNetLighter.infrastructure.packets.ArtPollReply}
  */
 public interface ArtNetStyleCodes {
     /**

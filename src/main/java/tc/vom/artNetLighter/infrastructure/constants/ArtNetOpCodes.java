@@ -16,7 +16,7 @@ public interface ArtNetOpCodes {
     /**
      * Diagnostics and data logging packet.
      */
-    int OP_CODE_DIAG_DATA = 0x2300;
+    int OP_CODE_DIAGNOSTIC_DATA = 0x2300;
     /**
      * Used to send text based parameter commands.
      */
@@ -99,13 +99,13 @@ public interface ArtNetOpCodes {
      */
     int OP_CODE_FILE_FN_REPLY = 0xf600;
     /**
-     * This is an ArtIpProg packet. It is used to reprogramme the IP, Mask and Port address of the Node.
+     * This is an ArtIpProgram packet. It is used to reprogramme the IP, Mask and Port address of the Node.
      */
-    int OP_CODE_IP_PROG = 0xf800;
+    int OP_CODE_IP_PROGRAM = 0xf800;
     /**
-     * This is an ArtIpProgReply packet. It is returned by the node to acknowledge receipt of an ArtIpProg packet.
+     * This is an ArtIpProgramReply packet. It is returned by the node to acknowledge receipt of an ArtIpProgram packet.
      */
-    int OP_CODE_IP_PROG_REPLY = 0xf900;
+    int OP_CODE_IP_PROGRAM_REPLY = 0xf900;
     /**
      * This is an ArtMedia packet. It is Unicast by a Media Server and acted upon by a Controller.
      */
@@ -121,7 +121,7 @@ public interface ArtNetOpCodes {
     /**
      * This is an ArtMediaControlReply packet. It is Unicast by a Media Server and acted upon by a Controller.
      */
-    int OP_CODE_MEDIA_CONTRL_REPLY = 0x9300;
+    int OP_CODE_MEDIA_CONTROL_REPLY = 0x9300;
     /**
      * This is an ArtTimeCode packet. It is used to transport time code over the network.
      */

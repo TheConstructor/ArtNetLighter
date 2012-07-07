@@ -1,11 +1,7 @@
 package tc.vom.artNetLighter.infrastructure.constants;
 
 /**
- * Created with IntelliJ IDEA.
- * User: matthias
- * Date: 07.07.12
- * Time: 17:38
- * To change this template use File | Settings | File Templates.
+ * Contains the Node Report Code for {@link tc.vom.artNetLighter.infrastructure.packets.ArtPollReply}
  */
 public interface ArtNetNodeReportCodes {
     /**

@@ -3,11 +3,7 @@ package tc.vom.artNetLighter.infrastructure.packets;
 import tc.vom.artNetLighter.infrastructure.constants.ArtNetOpCodes;
 
 /**
- * Created with IntelliJ IDEA.
- * User: matthias
- * Date: 06.07.12
- * Time: 16:25
- * To change this template use File | Settings | File Templates.
+ * Used to hold the data of an ArtPoll-Packet.
  */
 public class ArtPoll extends ArtNetPacket {
 
@@ -16,9 +12,9 @@ public class ArtPoll extends ArtNetPacket {
     public static final int TALK_TO_ME_USE_UNICAST = 0x4;
 
     /**
-     * 2 Byte ProtVer
+     * 2 Byte Protocol Version
      */
-    private int protVer;
+    private int protocolVersion;
     /**
      * 1 Byte TalkToMe
      */
@@ -34,16 +30,16 @@ public class ArtPoll extends ArtNetPacket {
      */
     public ArtPoll(final int talkToMe, final int priority) {
         super(ArtNetOpCodes.OP_CODE_POLL);
-        this.protVer = ArtNetPacket.PROTOCOL_VERSION;
+        this.protocolVersion = ArtNetPacket.PROTOCOL_VERSION;
         this.talkToMe = talkToMe;
         this.priority = priority;
     }
 
     /**
-     * 2 Byte ProtVer
+     * 2 Byte Protocol Version
      */
-    public int getProtVer() {
-        return this.protVer;
+    public int getProtocolVersion() {
+        return this.protocolVersion;
     }
 
     public int getTalkToMe() {
@@ -64,7 +60,7 @@ public class ArtPoll extends ArtNetPacket {
 
     @Override
     public byte[] constructPacket() {
-        return ArtPoll.constructPacket(protVer, talkToMe, priority);
+        return ArtPoll.constructPacket(protocolVersion, talkToMe, priority);
     }
 
     public static byte[] constructPacket(final int talkToMe, final int priority) {

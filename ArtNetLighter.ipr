@@ -206,6 +206,16 @@
       </item>
     </group>
   </component>
+  <component name="ProjectDictionaryState">
+    <dictionary name="matthias">
+      <words>
+        <w>dhcp</w>
+        <w>inet</w>
+        <w>junit</w>
+        <w>unicast</w>
+      </words>
+    </dictionary>
+  </component>
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ArtNetLighter.iml" filepath="$PROJECT_DIR$/ArtNetLighter.iml" />
