@@ -3,6 +3,7 @@ package tc.vom.artNetLighter.infrastructure.packets;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import tc.vom.artNetLighter.infrastructure.constants.ArtNetOpCodes;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;

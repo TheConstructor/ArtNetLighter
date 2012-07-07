@@ -1,4 +1,4 @@
-package tc.vom.artNetLighter.infrastructure.packets;
+package tc.vom.artNetLighter.infrastructure.constants;
 
 /**
  * Holds all OpCode constants.

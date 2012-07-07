@@ -1,5 +1,7 @@
 package tc.vom.artNetLighter.infrastructure.packets;
 
+import tc.vom.artNetLighter.infrastructure.constants.ArtNetOpCodes;
+
 /**
  * Created with IntelliJ IDEA.
  * User: matthias

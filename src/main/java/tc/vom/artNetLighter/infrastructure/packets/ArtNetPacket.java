@@ -1,5 +1,9 @@
 package tc.vom.artNetLighter.infrastructure.packets;
 
+import tc.vom.artNetLighter.infrastructure.constants.ArtNetOpCodes;
+
+import java.nio.charset.Charset;
+
 /**
  * Represents an Art-Net packet that could be send or received.
  */
@@ -12,6 +16,9 @@ public abstract class ArtNetPacket implements ArtNetOpCodes {
      * 8 Byte identification
      */
     public static final byte[] ART_NET_ID = {'A', 'r', 't', '-', 'N', 'e', 't', 0};
+    public static final Charset STRING_CHARSET = Charset.forName("ISO-8859-15");
+
+
     /**
      * 2 Byte OpCode
      */
