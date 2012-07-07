@@ -17,7 +17,7 @@ import java.util.WeakHashMap;
 public class ArtNetSocketProvider {
     public static final int ART_NET_PORT = 0x1936;
 
-    private static WeakHashMap<InetAddress, DatagramSocket> map = new WeakHashMap<InetAddress, DatagramSocket>();
+    private static final WeakHashMap<InetAddress, DatagramSocket> map = new WeakHashMap<InetAddress, DatagramSocket>();
 
     public static DatagramSocket getArtNetSocket() throws SocketException {
         return ArtNetSocketProvider.getArtNetSocket(null);

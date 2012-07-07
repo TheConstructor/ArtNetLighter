@@ -1,6 +1,8 @@
 package tc.vom.artNetLighter.infrastructure;
 
-import java.net.*;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
 
 /**
  * This class is used to send out Art-Net universes.
@@ -10,10 +12,6 @@ import java.net.*;
  * @since 2012-07-06
  */
 public class ArtNetSender {
-    public static final int MAX_NET = 0x7F;
-    public static final int MAX_SUB_NET = 0xF;
-    public static final int MAX_UNIVERSE = 0xF;
-    public static final int MAX_PORT_ADDRESS = 0x7FFF;
 
     private int portAddress;
     private InetAddress inetAddress;
@@ -29,33 +27,27 @@ public class ArtNetSender {
     }
 
     public int getNet() {
-        return (portAddress & 0x7F00) >> 8;
+        return ArtNetToolkit.getNet(portAddress);
     }
 
     public void setNet(int newNet) {
-        if (newNet > MAX_NET || newNet < 0)
-            throw new IllegalArgumentException("Net must be in range [0," + MAX_NET + "]");
-        portAddress = (portAddress & 0x00FF) | (newNet << 8);
+        portAddress = ArtNetToolkit.setNet(portAddress, newNet);
     }
 
     public int getSubNet() {
-        return (portAddress & 0x00F0) >> 4;
+        return ArtNetToolkit.getSubNet(portAddress);
     }
 
     public void setSubNet(int newSubNet) {
-        if (newSubNet > MAX_SUB_NET || newSubNet < 0)
-            throw new IllegalArgumentException("Sub-Net must be in range [0," + MAX_SUB_NET + "]");
-        portAddress = (portAddress & 0x7F0F) | (newSubNet << 4);
+        portAddress = ArtNetToolkit.setSubNet(portAddress, newSubNet);
     }
 
     public int getUniverse() {
-        return (portAddress & 0x000F);
+        return ArtNetToolkit.getUniverse(portAddress);
     }
 
     public void setUniverse(int newUniverse) {
-        if (newUniverse > MAX_UNIVERSE || newUniverse < 0)
-            throw new IllegalArgumentException("Universe must be in range [0," + MAX_UNIVERSE + "]");
-        portAddress = (portAddress & 0x7FF0) | newUniverse;
+        portAddress = ArtNetToolkit.setUniverse(portAddress, newUniverse);
     }
 
     public int getPortAddress() {
@@ -63,8 +55,8 @@ public class ArtNetSender {
     }
 
     public void setPortAddress(int newPortAddress) {
-        if (newPortAddress > MAX_PORT_ADDRESS || newPortAddress < 0)
-            throw new IllegalArgumentException("Port Address must be in range [0," + MAX_PORT_ADDRESS + "]");
+        if (newPortAddress > ArtNetToolkit.MAX_PORT_ADDRESS || newPortAddress < 0)
+            throw new IllegalArgumentException("Port Address must be in range [0," + ArtNetToolkit.MAX_PORT_ADDRESS + "]");
         this.portAddress = newPortAddress;
     }
 
