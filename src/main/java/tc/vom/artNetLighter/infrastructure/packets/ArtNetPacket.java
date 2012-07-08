@@ -118,6 +118,20 @@ public abstract class ArtNetPacket implements ArtNetOpCodes {
         return result;
     }
 
+    public static ArtNetPacket parsePacket(final byte[] data) {
+        final int opCode = get2BytesLowToHigh(data, 8);
+        switch (opCode) {
+            case ArtNetOpCodes.OP_CODE_POLL:
+                return new ArtPoll(data);
+            case ArtNetOpCodes.OP_CODE_POLL_REPLY:
+                return new ArtPollReply(data);
+            case ArtNetOpCodes.OP_CODE_DMX:
+                return new ArtDmx(data);
+            default:
+                throw new IllegalArgumentException("The packet contains an unhandled OpCode");
+        }
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
