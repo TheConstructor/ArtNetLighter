@@ -31,64 +31,66 @@ public class ArtNetSender {
 
     private int portAddress;
     private InetAddress inetAddress;
+    @SuppressWarnings("FieldCanBeLocal")
     private DatagramSocket udpSocket;
 
-    public ArtNetSender(int portAddress) throws SocketException {
+    public ArtNetSender(final int portAddress) throws SocketException {
         this(portAddress, null);
     }
 
-    public ArtNetSender(int portAddress, InetAddress inetAddress) throws SocketException {
+    public ArtNetSender(final int portAddress, final InetAddress inetAddress) throws SocketException {
         this.setPortAddress(portAddress);
         this.setInetAddress(inetAddress);
     }
 
     public int getNet() {
-        return ArtNetToolkit.getNet(portAddress);
+        return ArtNetToolkit.getNet(this.portAddress);
     }
 
-    public void setNet(int newNet) {
-        portAddress = ArtNetToolkit.setNet(portAddress, newNet);
+    public void setNet(final int newNet) {
+        this.portAddress = ArtNetToolkit.setNet(this.portAddress, newNet);
     }
 
     public int getSubNet() {
-        return ArtNetToolkit.getSubNet(portAddress);
+        return ArtNetToolkit.getSubNet(this.portAddress);
     }
 
-    public void setSubNet(int newSubNet) {
-        portAddress = ArtNetToolkit.setSubNet(portAddress, newSubNet);
+    public void setSubNet(final int newSubNet) {
+        this.portAddress = ArtNetToolkit.setSubNet(this.portAddress, newSubNet);
     }
 
     public int getUniverse() {
-        return ArtNetToolkit.getUniverse(portAddress);
+        return ArtNetToolkit.getUniverse(this.portAddress);
     }
 
-    public void setUniverse(int newUniverse) {
-        portAddress = ArtNetToolkit.setUniverse(portAddress, newUniverse);
+    public void setUniverse(final int newUniverse) {
+        this.portAddress = ArtNetToolkit.setUniverse(this.portAddress, newUniverse);
     }
 
     public int getPortAddress() {
-        return portAddress;
+        return this.portAddress;
     }
 
-    public void setPortAddress(int newPortAddress) {
-        if (newPortAddress > ArtNetToolkit.MAX_PORT_ADDRESS || newPortAddress < 0)
+    public void setPortAddress(final int newPortAddress) {
+        if ((newPortAddress > ArtNetToolkit.MAX_PORT_ADDRESS) || (newPortAddress < 0)) {
             throw new IllegalArgumentException("Port Address must be in range [0," + ArtNetToolkit.MAX_PORT_ADDRESS + "]");
+        }
         this.portAddress = newPortAddress;
     }
 
     public InetAddress getInetAddress() {
-        return inetAddress;
+        return this.inetAddress;
     }
 
-    public void setInetAddress(InetAddress inetAddress) throws SocketException {
+    public void setInetAddress(final InetAddress inetAddress) throws SocketException {
         this.udpSocket = ArtNetSocketProvider.getArtNetSocket(inetAddress);
-        this.inetAddress = udpSocket.getLocalAddress();
+        this.inetAddress = this.udpSocket.getLocalAddress();
     }
 
     @Override
     public String toString() {
         return "ArtNetSender{" +
-                "portAddress=" + portAddress +
+                "portAddress=" + this.portAddress +
                 '}';
     }
 }

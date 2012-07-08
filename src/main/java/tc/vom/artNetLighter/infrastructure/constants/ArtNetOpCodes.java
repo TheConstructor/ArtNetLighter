@@ -19,6 +19,7 @@ package tc.vom.artNetLighter.infrastructure.constants;
 /**
  * Holds all OpCode constants.
  */
+@SuppressWarnings("UnusedDeclaration")
 public interface ArtNetOpCodes {
     /**
      * This is an ArtPoll packet, no other data is contained in this UDP

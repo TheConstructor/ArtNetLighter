@@ -32,7 +32,7 @@ public class ArtNetPacketTest {
 
     @Before
     public void setUp() throws Exception {
-        artNetPacket = new ArtNetPacket(ArtNetOpCodes.OP_CODE_POLL) {
+        this.artNetPacket = new ArtNetPacket(ArtNetOpCodes.OP_CODE_POLL) {
             @Override
             public byte[] constructPacket() {
                 return ArtNetPacket.constructPacket(ArtNetPacket.HEADER_LENGTH, ArtNetOpCodes.OP_CODE_POLL);
@@ -42,17 +42,17 @@ public class ArtNetPacketTest {
 
     @After
     public void tearDown() throws Exception {
-        artNetPacket = null;
+        this.artNetPacket = null;
     }
 
     @Test
     public void testGetOpCode() throws Exception {
-        assertEquals("Op Code was set to OP_POLL", ArtNetOpCodes.OP_CODE_POLL, artNetPacket.getOpCode());
+        assertEquals("Op Code was set to OP_POLL", ArtNetOpCodes.OP_CODE_POLL, this.artNetPacket.getOpCode());
     }
 
     @Test
     public void testConstructPacket1() throws Exception {
-        assertArrayEquals("constructPacket should do the same as the static call", artNetPacket.constructPacket(), ArtNetPacket.constructPacket(ArtNetPacket.HEADER_LENGTH, ArtNetOpCodes.OP_CODE_POLL));
+        assertArrayEquals("constructPacket should do the same as the static call", this.artNetPacket.constructPacket(), ArtNetPacket.constructPacket(ArtNetPacket.HEADER_LENGTH, ArtNetOpCodes.OP_CODE_POLL));
     }
 
     @Test

@@ -40,12 +40,13 @@ public class ArtNetSocketProvider {
     }
 
     public static DatagramSocket getArtNetSocket(InetAddress inetAddress) throws SocketException {
-        if (inetAddress == null)
+        if (inetAddress == null) {
             inetAddress = ArtNetSocketProvider.findHostAddress();
-        DatagramSocket result = map.get(inetAddress);
+        }
+        DatagramSocket result = ArtNetSocketProvider.map.get(inetAddress);
         if (result == null) {
-            result = new DatagramSocket(ART_NET_PORT, inetAddress);
-            map.put(inetAddress, result);
+            result = new DatagramSocket(ArtNetSocketProvider.ART_NET_PORT, inetAddress);
+            ArtNetSocketProvider.map.put(inetAddress, result);
         }
         return result;
     }
@@ -60,14 +61,16 @@ public class ArtNetSocketProvider {
         selection:
         while (networkInterfaces.hasMoreElements()) {
             final NetworkInterface networkInterface = networkInterfaces.nextElement();
-            if (!networkInterface.isUp())
+            if (!networkInterface.isUp()) {
                 continue;
+            }
             final Enumeration<InetAddress> addressEnumeration = networkInterface.getInetAddresses();
             while (addressEnumeration.hasMoreElements()) {
                 final InetAddress inetAddress = addressEnumeration.nextElement();
                 final byte[] address = inetAddress.getAddress();
-                if (address.length != 4)
+                if (address.length != 4) {
                     continue;
+                }
                 switch (address[0]) {
                     case 127:
                         continue;
@@ -85,10 +88,11 @@ public class ArtNetSocketProvider {
         }
 
         if (hostAddress == null) {
-            if (fallbackAddress != null)
+            if (fallbackAddress != null) {
                 hostAddress = fallbackAddress;
-            else
+            } else {
                 hostAddress = lastAddress;
+            }
         }
         return hostAddress;
     }

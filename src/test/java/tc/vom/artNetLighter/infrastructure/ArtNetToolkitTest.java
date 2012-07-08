@@ -94,56 +94,56 @@ public class ArtNetToolkitTest {
 
     @Test
     public void testGet4ByteHighToLow() {
-        byte[] data = {0x02, 0x07, 0x5a, (byte) 0x91};
+        final byte[] data = {0x02, 0x07, 0x5a, (byte) 0x91};
         assertEquals(0x02075a91, ArtNetToolkit.get4BytesHighToLow(data, 0));
     }
 
     @Test
     public void testGet4ByteLowToHigh() {
-        byte[] data = {0x02, 0x07, 0x5a, (byte) 0x91};
+        final byte[] data = {0x02, 0x07, 0x5a, (byte) 0x91};
         assertEquals(0x915a0702, ArtNetToolkit.get4BytesLowToHigh(data, 0));
     }
 
     @Test
     public void testGet2ByteHighToLow() {
-        byte[] data = {0x5a, (byte) 0x91};
+        final byte[] data = {0x5a, (byte) 0x91};
         assertEquals(0x5a91, ArtNetToolkit.get2BytesHighToLow(data, 0));
     }
 
     @Test
     public void testGet2ByteLowToHigh() {
-        byte[] data = {0x5a, (byte) 0x91};
+        final byte[] data = {0x5a, (byte) 0x91};
         assertEquals(0x915a, ArtNetToolkit.get2BytesLowToHigh(data, 0));
     }
 
     @Test
     public void testSet4ByteHighToLow() {
-        byte[] data = {0x02, 0x07, 0x5a, (byte) 0x91};
-        byte[] result = new byte[4];
+        final byte[] data = {0x02, 0x07, 0x5a, (byte) 0x91};
+        final byte[] result = new byte[4];
         ArtNetToolkit.set4BytesHighToLow(0x02075a91, result, 0);
         assertArrayEquals(data, result);
     }
 
     @Test
     public void testSet4ByteLowToHigh() {
-        byte[] data = {0x02, 0x07, 0x5a, (byte) 0x91};
-        byte[] result = new byte[4];
+        final byte[] data = {0x02, 0x07, 0x5a, (byte) 0x91};
+        final byte[] result = new byte[4];
         ArtNetToolkit.set4BytesLowToHigh(0x915a0702, result, 0);
         assertArrayEquals(data, result);
     }
 
     @Test
     public void testSet2ByteHighToLow() {
-        byte[] data = {0x5a, (byte) 0x91};
-        byte[] result = new byte[2];
+        final byte[] data = {0x5a, (byte) 0x91};
+        final byte[] result = new byte[2];
         ArtNetToolkit.set2BytesHighToLow(0x5a91, result, 0);
         assertArrayEquals(data, result);
     }
 
     @Test
     public void testSet2ByteLowToHigh() {
-        byte[] data = {0x5a, (byte) 0x91};
-        byte[] result = new byte[2];
+        final byte[] data = {0x5a, (byte) 0x91};
+        final byte[] result = new byte[2];
         ArtNetToolkit.set2BytesLowToHigh(0x915a, result, 0);
         assertArrayEquals(data, result);
     }

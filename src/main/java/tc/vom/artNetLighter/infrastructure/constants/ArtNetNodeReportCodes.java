@@ -19,6 +19,7 @@ package tc.vom.artNetLighter.infrastructure.constants;
 /**
  * Contains the Node Report Code for {@link tc.vom.artNetLighter.infrastructure.packets.ArtPollReply}
  */
+@SuppressWarnings("UnusedDeclaration")
 public interface ArtNetNodeReportCodes {
     /**
      * Booted in debug mode (Only used in development)

@@ -41,7 +41,7 @@ public class ArtNetSocketProviderTest {
 
     @Test
     public void testInetAddressMatches() throws Exception {
-        InetAddress inetAddress = InetAddress.getLocalHost();
+        final InetAddress inetAddress = InetAddress.getLocalHost();
         assertEquals("InetAddress of provided Socket does not match requested InetAddress", inetAddress, ArtNetSocketProvider.getArtNetSocket(inetAddress).getLocalAddress());
     }
 }

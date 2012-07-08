@@ -32,16 +32,16 @@ public class ArtPoll extends ArtNetPacket {
     /**
      * 2 Byte Protocol Version
      */
-    private int protocolVersion;
+    private final int protocolVersion;
     /**
      * 1 Byte TalkToMe
      */
-    private int talkToMe;
+    private final int talkToMe;
 
     /**
      * 1 Byte Priority
      */
-    private int priority;
+    private final int priority;
 
     /**
      * @param talkToMe
@@ -61,30 +61,23 @@ public class ArtPoll extends ArtNetPacket {
     }
 
     public int getTalkToMe() {
-        return talkToMe;
-    }
-
-    public void setTalkToMe(int talkToMe) {
-        this.talkToMe = talkToMe;
+        return this.talkToMe;
     }
 
     public int getPriority() {
-        return priority;
-    }
-
-    public void setPriority(int priority) {
-        this.priority = priority;
+        return this.priority;
     }
 
     @Override
     public byte[] constructPacket() {
-        return ArtPoll.constructPacket(protocolVersion, talkToMe, priority);
+        return ArtPoll.constructPacket(this.protocolVersion, this.talkToMe, this.priority);
     }
 
     public static byte[] constructPacket(final int talkToMe, final int priority) {
         return ArtPoll.constructPacket(ArtNetPacket.PROTOCOL_VERSION, talkToMe, priority);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static byte[] constructPacket(final int protocolVersion, final int talkToMe, final int priority) {
         final byte[] result = ArtNetPacket.constructPacket(ArtNetPacket.HEADER_LENGTH + 4, ArtNetOpCodes.OP_CODE_POLL);
         result[ArtNetPacket.HEADER_LENGTH] = (byte) ((protocolVersion & 0xff00) >> 8);
@@ -94,7 +87,7 @@ public class ArtPoll extends ArtNetPacket {
         return result;
     }
 
-    public ArtPoll(byte[] data) {
+    public ArtPoll(final byte[] data) {
         super(data);
         if (data.length < ArtPoll.PACKET_LENGTH) {
             throw new IllegalArgumentException("Minimum size for ArtPoll is " + ArtPoll.PACKET_LENGTH);

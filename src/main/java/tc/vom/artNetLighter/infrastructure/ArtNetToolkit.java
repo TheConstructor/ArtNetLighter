@@ -43,7 +43,6 @@ public class ArtNetToolkit {
     public static final int MAX_PORT_ADDRESS = 0x7FFF;
 
     private ArtNetToolkit() {
-
     }
 
     /**
@@ -52,7 +51,7 @@ public class ArtNetToolkit {
      * @param portAddress Port Address
      * @return Net
      */
-    public static int getNet(int portAddress) {
+    public static int getNet(final int portAddress) {
         return (portAddress & 0x7F00) >> 8;
     }
 
@@ -64,9 +63,10 @@ public class ArtNetToolkit {
      * @param newNet      7 Bit Net
      * @return 15 Bit Port Address
      */
-    public static int setNet(int portAddress, int newNet) {
-        if (newNet > MAX_NET || newNet < 0)
-            throw new IllegalArgumentException("Net must be in range [0," + MAX_NET + "]");
+    public static int setNet(int portAddress, final int newNet) {
+        if ((newNet > ArtNetToolkit.MAX_NET) || (newNet < 0)) {
+            throw new IllegalArgumentException("Net must be in range [0," + ArtNetToolkit.MAX_NET + "]");
+        }
         portAddress = (portAddress & 0x00FF) | (newNet << 8);
         return portAddress;
     }
@@ -77,7 +77,7 @@ public class ArtNetToolkit {
      * @param portAddress 16 Bit Port Address
      * @return 4 Bit Sub-Net
      */
-    public static int getSubNet(int portAddress) {
+    public static int getSubNet(final int portAddress) {
         return (portAddress & 0x00F0) >> 4;
     }
 
@@ -89,9 +89,10 @@ public class ArtNetToolkit {
      * @param newSubNet   4 Bit Sub-Net
      * @return 15 Bit Port Address
      */
-    public static int setSubNet(int portAddress, int newSubNet) {
-        if (newSubNet > MAX_SUB_NET || newSubNet < 0)
-            throw new IllegalArgumentException("Sub-Net must be in range [0," + MAX_SUB_NET + "]");
+    public static int setSubNet(int portAddress, final int newSubNet) {
+        if ((newSubNet > ArtNetToolkit.MAX_SUB_NET) || (newSubNet < 0)) {
+            throw new IllegalArgumentException("Sub-Net must be in range [0," + ArtNetToolkit.MAX_SUB_NET + "]");
+        }
         portAddress = (portAddress & 0x7F0F) | (newSubNet << 4);
         return portAddress;
     }
@@ -102,7 +103,7 @@ public class ArtNetToolkit {
      * @param portAddress 16 Bit Port Address
      * @return 4 Bit Universe
      */
-    public static int getUniverse(int portAddress) {
+    public static int getUniverse(final int portAddress) {
         return (portAddress & 0x000F);
     }
 
@@ -113,9 +114,10 @@ public class ArtNetToolkit {
      * @param newUniverse 4 Bit Universe
      * @return 15 Bit Port Address
      */
-    public static int setUniverse(int portAddress, int newUniverse) {
-        if (newUniverse > MAX_UNIVERSE || newUniverse < 0)
-            throw new IllegalArgumentException("Universe must be in range [0," + MAX_UNIVERSE + "]");
+    public static int setUniverse(int portAddress, final int newUniverse) {
+        if ((newUniverse > ArtNetToolkit.MAX_UNIVERSE) || (newUniverse < 0)) {
+            throw new IllegalArgumentException("Universe must be in range [0," + ArtNetToolkit.MAX_UNIVERSE + "]");
+        }
         portAddress = (portAddress & 0x7FF0) | newUniverse;
         return portAddress;
     }
@@ -128,23 +130,23 @@ public class ArtNetToolkit {
      * @param universe 4 Bit Universe
      * @return 16 Bit Port Address
      */
-    public static int getPortId(int net, int subNet, int universe) {
-        return setNet(setSubNet(setUniverse(0, universe), subNet), net);
+    public static int getPortId(final int net, final int subNet, final int universe) {
+        return ArtNetToolkit.setNet(ArtNetToolkit.setSubNet(ArtNetToolkit.setUniverse(0, universe), subNet), net);
     }
 
-    public static boolean isBitSet(int input, int bit) {
+    public static boolean isBitSet(final int input, final int bit) {
         return (input & (1 << bit)) == 1;
     }
 
-    public static int setBit(int input, int bit) {
+    public static int setBit(final int input, final int bit) {
         return (input | (1 << bit));
     }
 
-    public static int toggleBit(int input, int bit) {
+    public static int toggleBit(final int input, final int bit) {
         return (input ^ (1 << bit));
     }
 
-    public static int unsetBit(int input, int bit) {
+    public static int unsetBit(final int input, final int bit) {
         return (input & (~(1 << bit)));
     }
 
@@ -167,46 +169,46 @@ public class ArtNetToolkit {
             {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80}
     };
 
-    public static int getBits(int input, int lower, int upper) {
-        return input & generateBitRangeMask(lower, upper);
+    public static int getBits(final int input, final int lower, final int upper) {
+        return input & ArtNetToolkit.generateBitRangeMask(lower, upper);
     }
 
 
-    public static int setBits(int input, int lower, int upper) {
-        final int mask = generateBitRangeMask(lower, upper);
+    public static int setBits(final int input, final int lower, final int upper) {
+        final int mask = ArtNetToolkit.generateBitRangeMask(lower, upper);
         return input | mask;
     }
 
 
-    public static int setBits(int input, int bits, int lower, int upper) {
-        final int mask = generateBitRangeMask(lower, upper);
+    public static int setBits(final int input, final int bits, final int lower, final int upper) {
+        final int mask = ArtNetToolkit.generateBitRangeMask(lower, upper);
         return (input & (~mask)) | (bits & mask);
     }
 
-    public static int unsetBits(int input, int lower, int upper) {
-        final int mask = generateBitRangeMask(lower, upper);
+    public static int unsetBits(final int input, final int lower, final int upper) {
+        final int mask = ArtNetToolkit.generateBitRangeMask(lower, upper);
         return input & (~mask);
     }
 
-    public static int toggleBits(int input, int lower, int upper) {
-        final int mask = generateBitRangeMask(lower, upper);
+    public static int toggleBits(final int input, final int lower, final int upper) {
+        final int mask = ArtNetToolkit.generateBitRangeMask(lower, upper);
         return input ^ mask;
     }
 
     public static int generateBitRangeMask(int lower, int upper) {
         if (lower > upper) {
             throw new IllegalArgumentException("Upper boundary has to be greater or equal to lower boundary");
-        } else if (lower < 8 && upper < 8) {
-            return BIT_MASKS[lower][upper];
+        } else if ((lower < 8) && (upper < 8)) {
+            return ArtNetToolkit.BIT_MASKS[lower][upper];
         } else {
             int mask = 0;
             int shift = 0;
             while (upper >= 0) {
                 if (lower < 8) {
                     if (upper < 8) {
-                        mask |= (BIT_MASKS[lower][upper] << shift);
+                        mask |= (ArtNetToolkit.BIT_MASKS[lower][upper] << shift);
                     } else {
-                        mask |= (BIT_MASKS[lower][7] << shift);
+                        mask |= (ArtNetToolkit.BIT_MASKS[lower][7] << shift);
                     }
                 }
                 lower = Math.max(0, lower - 8);
@@ -217,28 +219,29 @@ public class ArtNetToolkit {
         }
     }
 
-    public static void copyToArray(byte[] from, byte[] to, int offset) {
+    public static void copyToArray(final byte[] from, final byte[] to, final int offset) {
         System.arraycopy(from, 0, to, offset, from.length);
     }
 
-    public static void copyToArray(String from, byte[] to, int offset, int maxLength) {
-        byte[] strBytes = from.getBytes(ArtNetPacket.STRING_CHARSET);
-        if (strBytes.length > maxLength)
+    public static void copyToArray(final String from, final byte[] to, final int offset, final int maxLength) {
+        final byte[] strBytes = from.getBytes(ArtNetPacket.STRING_CHARSET);
+        if (strBytes.length > maxLength) {
             throw new IllegalArgumentException("String too long");
+        }
         ArtNetToolkit.copyToArray(strBytes, to, offset);
         Arrays.fill(to, offset + strBytes.length, offset + maxLength, (byte) 0);
     }
 
-    public static byte[] copyBytesFromArray(byte[] from, int offset, int length) {
+    public static byte[] copyBytesFromArray(final byte[] from, final int offset, final int length) {
         //return Arrays.copyOfRange(from, offset, offset + length);
         assert offset >= 0;
-        assert length <= from.length - offset;
-        byte[] result = new byte[length];
+        assert length <= (from.length - offset);
+        final byte[] result = new byte[length];
         System.arraycopy(from, offset, result, 0, length);
         return result;
     }
 
-    public static String copyStringFromArray(byte[] from, int offset, int length) {
+    public static String copyStringFromArray(final byte[] from, final int offset, final int length) {
         final String shortName = new String(from, offset, length, ArtNetPacket.STRING_CHARSET);
         final int nullTerminator = shortName.indexOf(0);
         if (nullTerminator != -1) {
@@ -247,50 +250,50 @@ public class ArtNetToolkit {
         return shortName;
     }
 
-    public static int get4BytesHighToLow(byte[] from, int offset) {
-        assert from.length > offset + 3;
+    public static int get4BytesHighToLow(final byte[] from, final int offset) {
+        assert from.length > (offset + 3);
         return ((from[offset] & 0xff) << 24) | ((from[offset + 1] & 0xff) << 16) | ((from[offset + 2] & 0xff) << 8) | (from[offset + 3] & 0xff);
     }
 
-    public static int get4BytesLowToHigh(byte[] from, int offset) {
-        assert from.length > offset + 3;
+    public static int get4BytesLowToHigh(final byte[] from, final int offset) {
+        assert from.length > (offset + 3);
         return ((from[offset + 3] & 0xff) << 24) | ((from[offset + 2] & 0xff) << 16) | ((from[offset + 1] & 0xff) << 8) | (from[offset] & 0xff);
     }
 
-    public static int get2BytesHighToLow(byte[] from, int offset) {
-        assert from.length > offset + 1;
+    public static int get2BytesHighToLow(final byte[] from, final int offset) {
+        assert from.length > (offset + 1);
         return ((from[offset] & 0xff) << 8) | (from[offset + 1] & 0xff);
     }
 
-    public static int get2BytesLowToHigh(byte[] from, int offset) {
-        assert from.length > offset + 1;
+    public static int get2BytesLowToHigh(final byte[] from, final int offset) {
+        assert from.length > (offset + 1);
         return ((from[offset + 1] & 0xff) << 8) | (from[offset] & 0xff);
     }
 
-    public static void set4BytesHighToLow(int from, byte[] to, int offset) {
-        assert to.length > offset + 3;
+    public static void set4BytesHighToLow(final int from, final byte[] to, final int offset) {
+        assert to.length > (offset + 3);
         to[offset] = (byte) ((from >> 24) & 0xff);
         to[offset + 1] = (byte) ((from >> 16) & 0xff);
         to[offset + 2] = (byte) ((from >> 8) & 0xff);
         to[offset + 3] = (byte) (from & 0xff);
     }
 
-    public static void set4BytesLowToHigh(int from, byte[] to, int offset) {
-        assert to.length > offset + 3;
+    public static void set4BytesLowToHigh(final int from, final byte[] to, final int offset) {
+        assert to.length > (offset + 3);
         to[offset + 3] = (byte) ((from >> 24) & 0xff);
         to[offset + 2] = (byte) ((from >> 16) & 0xff);
         to[offset + 1] = (byte) ((from >> 8) & 0xff);
         to[offset] = (byte) (from & 0xff);
     }
 
-    public static void set2BytesHighToLow(int from, byte[] to, int offset) {
-        assert to.length > offset + 1;
+    public static void set2BytesHighToLow(final int from, final byte[] to, final int offset) {
+        assert to.length > (offset + 1);
         to[offset] = (byte) ((from >> 8) & 0xff);
         to[offset + 1] = (byte) (from & 0xff);
     }
 
-    public static void set2BytesLowToHigh(int from, byte[] to, int offset) {
-        assert to.length > offset + 1;
+    public static void set2BytesLowToHigh(final int from, final byte[] to, final int offset) {
+        assert to.length > (offset + 1);
         to[offset + 1] = (byte) ((from >> 8) & 0xff);
         to[offset] = (byte) (from & 0xff);
     }

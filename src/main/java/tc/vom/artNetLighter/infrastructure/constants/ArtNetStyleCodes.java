@@ -19,6 +19,7 @@ package tc.vom.artNetLighter.infrastructure.constants;
 /**
  * Contains the Art-Net Style Codes used by {@link tc.vom.artNetLighter.infrastructure.packets.ArtPollReply}
  */
+@SuppressWarnings("UnusedDeclaration")
 public interface ArtNetStyleCodes {
     /**
      * A DMX to / from Art-Net device

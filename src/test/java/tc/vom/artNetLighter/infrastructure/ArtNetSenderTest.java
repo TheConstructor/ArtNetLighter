@@ -33,74 +33,91 @@ public class ArtNetSenderTest {
 
     @Before
     public void setUp() throws Exception {
-        artNetSender = new ArtNetSender(0x7FFF);
+        this.artNetSender = new ArtNetSender(0);
     }
 
     @After
     public void tearDown() throws Exception {
-        artNetSender = null;
+        this.artNetSender = null;
     }
 
     @Test
-    public void testNet() {
-        assertEquals("Net is not 127", 127, artNetSender.getNet());
+    public void testPortConstructor1() throws Exception {
+        this.artNetSender = new ArtNetSender(ArtNetToolkit.MAX_PORT_ADDRESS);
+        assertEquals("Net", ArtNetToolkit.MAX_NET, this.artNetSender.getNet());
+        assertEquals("Sub-Net", ArtNetToolkit.MAX_SUB_NET, this.artNetSender.getSubNet());
+        assertEquals("Universe", ArtNetToolkit.MAX_UNIVERSE, this.artNetSender.getUniverse());
+        assertEquals("Port Address", ArtNetToolkit.MAX_UNIVERSE, this.artNetSender.getPortAddress());
+    }
+
+    @Test
+    public void testPortConstructor2() throws Exception {
+        this.artNetSender = new ArtNetSender(0);
+        assertEquals("Net is not 0", 0, this.artNetSender.getNet());
+        assertEquals("Sub-Net is not 0", 0, this.artNetSender.getSubNet());
+        assertEquals("Universe is not 0", 0, this.artNetSender.getUniverse());
+        assertEquals("Port Address is not 0", 0, this.artNetSender.getPortAddress());
+    }
+
+    @Test
+    public void testPortConstructor3() throws Exception {
+        InetAddress inetAddress = ArtNetSocketProvider.findHostAddress();
+        this.artNetSender = new ArtNetSender(0, inetAddress);
+        assertEquals("InetAddress", inetAddress, this.artNetSender.getInetAddress());
+        assertEquals("Net is not 0", 0, this.artNetSender.getNet());
+        assertEquals("Sub-Net is not 0", 0, this.artNetSender.getSubNet());
+        assertEquals("Universe is not 0", 0, this.artNetSender.getUniverse());
+        assertEquals("Port Address is not 0", 0, this.artNetSender.getPortAddress());
     }
 
     @Test
     public void testNet2() {
-        artNetSender.setNet(2);
-        assertEquals("Net is not 2", 2, artNetSender.getNet());
-    }
-
-    @Test
-    public void testSubNet() {
-        assertEquals("Sub-Net is not 15", 15, artNetSender.getSubNet());
+        this.artNetSender.setNet(2);
+        assertEquals("Net is not 2", 2, this.artNetSender.getNet());
+        this.artNetSender.setNet(127);
+        assertEquals("Net is not 127", 127, this.artNetSender.getNet());
     }
 
     @Test
     public void testSubNet2() {
-        artNetSender.setSubNet(2);
-        assertEquals("Sub-Net is not 2", 2, artNetSender.getSubNet());
-    }
-
-    @Test
-    public void testUniverse() {
-        assertEquals("Universe is not 15", 15, artNetSender.getUniverse());
+        this.artNetSender.setSubNet(2);
+        assertEquals("Sub-Net is not 2", 2, this.artNetSender.getSubNet());
+        this.artNetSender.setSubNet(15);
+        assertEquals("Sub-Net is not 15", 15, this.artNetSender.getSubNet());
     }
 
     @Test
     public void testUniverse2() {
-        artNetSender.setUniverse(2);
-        assertEquals("Universe is not 2", 2, artNetSender.getUniverse());
-    }
-
-    @Test
-    public void testPortAddress() {
-        assertEquals("Port Address is not 32767", 32767, artNetSender.getPortAddress());
+        this.artNetSender.setUniverse(2);
+        assertEquals("Universe is not 2", 2, this.artNetSender.getUniverse());
+        this.artNetSender.setUniverse(15);
+        assertEquals("Universe is not 15", 15, this.artNetSender.getUniverse());
     }
 
     @Test
     public void testPortAddress2() {
-        artNetSender.setPortAddress(2);
-        assertEquals("Port Address is not 2", 2, artNetSender.getUniverse());
+        this.artNetSender.setPortAddress(2);
+        assertEquals("Port Address is not 2", 2, this.artNetSender.getPortAddress());
+        this.artNetSender.setPortAddress(32767);
+        assertEquals("Port Address is not 32767", 2, this.artNetSender.getPortAddress());
     }
 
     @Test
     public void testInetAddress() throws Exception {
-        InetAddress inetAddress = InetAddress.getLocalHost();
-        artNetSender.setInetAddress(inetAddress);
-        assertEquals("InetAddress does not match provided InetAddress", inetAddress, artNetSender.getInetAddress());
+        final InetAddress inetAddress = InetAddress.getLocalHost();
+        this.artNetSender.setInetAddress(inetAddress);
+        assertEquals("InetAddress does not match provided InetAddress", inetAddress, this.artNetSender.getInetAddress());
     }
 
     @Test
     public void testInetAddressNotNull() throws Exception {
-        artNetSender.setInetAddress(null);
-        assertNotNull("InetAddress is null", artNetSender.getInetAddress());
+        this.artNetSender.setInetAddress(null);
+        assertNotNull("InetAddress is null", this.artNetSender.getInetAddress());
     }
 
     @Test
     public void testToString() {
-        String result = artNetSender.toString();
+        final String result = this.artNetSender.toString();
         assertNotNull("toString() returns null", result);
         assertFalse("toString() return \"\"", "".equals(result));
     }
