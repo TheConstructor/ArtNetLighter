@@ -1,3 +1,19 @@
+/*
+ * Dieses Werk ist unter einer Creative Commons Lizenz vom Typ Namensnennung - Weitergabe unter gleichen Bedingungen 3.0 Deutschland zugänglich. Um eine Kopie dieser Lizenz einzusehen, konsultieren Sie http://creativecommons.org/licenses/by-sa/3.0/de/ oder wenden Sie sich brieflich an Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 94041, USA.
+ *
+ * Autor des "ArtNetLighter" ist Matthias Vill http://vom.tc/
+ *
+ * --
+ *
+ * This work is licensed under the Creative Commons Attribution-ShareAlike 3.0 Germany License. To view a copy of this license, visit http://creativecommons.org/licenses/by-sa/3.0/de/ or send a letter to Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 94041, USA.
+ *
+ * Author of "ArtNetLighter" is Matthias Vill http://vom.tc/
+ *
+ * --
+ *
+ * Art-Net™ Designed by and Copyright Artistic Licence Holdings Ltd
+ */
+
 package tc.vom.artNetLighter.infrastructure.packets;
 
 import org.junit.Test;
@@ -56,7 +72,9 @@ public class ArtPollReplyTest {
     @Test
     public void testConstructPacket() throws Exception {
         ArtPollReply artPollReply = new ArtPollReply((2 << 24) | (7 << 16) | (90 << 8) | (145), 0x1936, 0x0101, 0, 0, 0x0190, 0, 0x02, 0x0000, "M. Vill Enttec OD", "M. Vill Enttec ODE", "", 1, new byte[]{(byte) 0x80, 0, 0, 0}, new byte[]{0, 0, 0, 0}, new byte[]{(byte) 0x80, 0, 0, 0}, new byte[]{0xc, 0, 0, 0}, new byte[]{0, 0, 0, 0}, 0, 0, 0, 0, new byte[]{0x32, 0x31, (byte) 0x82, (byte) 0x81, 0x01, 0x02}, 0, 0, 0);
-        assertArrayEquals(cleaned_data1, artPollReply.constructPacket());
+        final byte[] actual = artPollReply.constructPacket();
+        assertEquals("Length", ArtPollReply.PACKET_LENGTH, actual.length);
+        assertArrayEquals(cleaned_data1, actual);
     }
 
     @Test
