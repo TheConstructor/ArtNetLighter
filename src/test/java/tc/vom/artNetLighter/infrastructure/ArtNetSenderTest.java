@@ -47,7 +47,7 @@ public class ArtNetSenderTest {
         assertEquals("Net", ArtNetToolkit.MAX_NET, this.artNetSender.getNet());
         assertEquals("Sub-Net", ArtNetToolkit.MAX_SUB_NET, this.artNetSender.getSubNet());
         assertEquals("Universe", ArtNetToolkit.MAX_UNIVERSE, this.artNetSender.getUniverse());
-        assertEquals("Port Address", ArtNetToolkit.MAX_UNIVERSE, this.artNetSender.getPortAddress());
+        assertEquals("Port Address", ArtNetToolkit.MAX_PORT_ADDRESS, this.artNetSender.getPortAddress());
     }
 
     @Test
@@ -61,7 +61,7 @@ public class ArtNetSenderTest {
 
     @Test
     public void testPortConstructor3() throws Exception {
-        InetAddress inetAddress = ArtNetSocketProvider.findHostAddress();
+        final InetAddress inetAddress = ArtNetSocketProvider.findHostAddress();
         this.artNetSender = new ArtNetSender(0, inetAddress);
         assertEquals("InetAddress", inetAddress, this.artNetSender.getInetAddress());
         assertEquals("Net is not 0", 0, this.artNetSender.getNet());
@@ -99,7 +99,7 @@ public class ArtNetSenderTest {
         this.artNetSender.setPortAddress(2);
         assertEquals("Port Address is not 2", 2, this.artNetSender.getPortAddress());
         this.artNetSender.setPortAddress(32767);
-        assertEquals("Port Address is not 32767", 2, this.artNetSender.getPortAddress());
+        assertEquals("Port Address is not 32767", 32767, this.artNetSender.getPortAddress());
     }
 
     @Test

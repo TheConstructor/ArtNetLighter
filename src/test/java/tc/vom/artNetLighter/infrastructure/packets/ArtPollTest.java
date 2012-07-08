@@ -38,7 +38,7 @@ public class ArtPollTest {
 
     @Test
     public void testConstructPacket() {
-        final byte[] packet = ArtPoll.constructPacket(0x06, 0x00);
-        assertArrayEquals("Generated packet does not match captured package", ArtPollTest.captured_data1, packet);
+        final ArtPoll artPoll = new ArtPoll(0x06, 0x00);
+        assertArrayEquals("Generated packet does not match captured package", ArtPollTest.captured_data1, artPoll.constructPacket());
     }
 }
