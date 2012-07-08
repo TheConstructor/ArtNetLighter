@@ -35,7 +35,7 @@ public class ArtNetPacketTest {
         this.artNetPacket = new ArtNetPacket(ArtNetOpCodes.OP_CODE_POLL) {
             @Override
             public byte[] constructPacket() {
-                return ArtNetPacket.constructPacket(ArtNetPacket.HEADER_LENGTH, ArtNetOpCodes.OP_CODE_POLL);
+                return ArtNetPacket.constructUnversionedPacket(ArtNetPacket.SHORT_HEADER_LENGTH, ArtNetOpCodes.OP_CODE_POLL);
             }
         };
     }
@@ -52,11 +52,11 @@ public class ArtNetPacketTest {
 
     @Test
     public void testConstructPacket1() throws Exception {
-        assertArrayEquals("constructPacket should do the same as the static call", this.artNetPacket.constructPacket(), ArtNetPacket.constructPacket(ArtNetPacket.HEADER_LENGTH, ArtNetOpCodes.OP_CODE_POLL));
+        assertArrayEquals("constructUnversionedPacket should do the same as the static call", this.artNetPacket.constructPacket(), ArtNetPacket.constructUnversionedPacket(ArtNetPacket.SHORT_HEADER_LENGTH, ArtNetOpCodes.OP_CODE_POLL));
     }
 
     @Test
     public void testConstructPacket2() throws Exception {
-        assertArrayEquals("constructPacket(HEADER_LENGTH, OP_POLL) should generate a valid OP_POLL header", new byte[]{'A', 'r', 't', '-', 'N', 'e', 't', 0, ArtNetOpCodes.OP_CODE_POLL & 0xff, (ArtNetOpCodes.OP_CODE_POLL >> 8) & 0xff}, ArtNetPacket.constructPacket(ArtNetPacket.HEADER_LENGTH, ArtNetOpCodes.OP_CODE_POLL));
+        assertArrayEquals("constructUnversionedPacket(HEADER_LENGTH, OP_POLL) should generate a valid OP_POLL header", new byte[]{'A', 'r', 't', '-', 'N', 'e', 't', 0, ArtNetOpCodes.OP_CODE_POLL & 0xff, (ArtNetOpCodes.OP_CODE_POLL >> 8) & 0xff}, ArtNetPacket.constructUnversionedPacket(ArtNetPacket.SHORT_HEADER_LENGTH, ArtNetOpCodes.OP_CODE_POLL));
     }
 }

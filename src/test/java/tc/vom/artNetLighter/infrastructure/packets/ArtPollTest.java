@@ -17,6 +17,7 @@
 package tc.vom.artNetLighter.infrastructure.packets;
 
 import org.junit.Test;
+import tc.vom.artNetLighter.infrastructure.constants.ArtNetOpCodes;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -31,6 +32,7 @@ public class ArtPollTest {
     @Test
     public void testConstructorBytes() {
         final ArtPoll artPoll = new ArtPoll(ArtPollTest.captured_data1);
+        assertEquals("OpCode", ArtNetOpCodes.OP_CODE_POLL, artPoll.getOpCode());
         assertEquals("ProtocolVersion", ArtNetPacket.PROTOCOL_VERSION, artPoll.getProtocolVersion());
         assertEquals("TalkToMe", 0x06, artPoll.getTalkToMe());
         assertEquals("Priority", 0x00, artPoll.getPriority());

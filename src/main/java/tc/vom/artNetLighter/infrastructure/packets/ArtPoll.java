@@ -27,12 +27,7 @@ public class ArtPoll extends ArtNetPacket {
     public static final int TALK_TO_ME_SEND_DIAGNOSTICS_MESSAGES = 0x2;
     public static final int TALK_TO_ME_USE_UNICAST = 0x4;
 
-    public static final int PACKET_LENGTH = ArtNetPacket.HEADER_LENGTH + 4;
-
-    /**
-     * 2 Byte Protocol Version
-     */
-    private final int protocolVersion;
+    public static final int PACKET_LENGTH = ArtNetPacket.FULL_HEADER_LENGTH + 2;
     /**
      * 1 Byte TalkToMe
      */
@@ -48,16 +43,8 @@ public class ArtPoll extends ArtNetPacket {
      */
     public ArtPoll(final int talkToMe, final int priority) {
         super(ArtNetOpCodes.OP_CODE_POLL);
-        this.protocolVersion = ArtNetPacket.PROTOCOL_VERSION;
         this.talkToMe = talkToMe;
         this.priority = priority;
-    }
-
-    /**
-     * 2 Byte Protocol Version
-     */
-    public int getProtocolVersion() {
-        return this.protocolVersion;
     }
 
     public int getTalkToMe() {
@@ -70,20 +57,13 @@ public class ArtPoll extends ArtNetPacket {
 
     @Override
     public byte[] constructPacket() {
-        return ArtPoll.constructPacket(this.protocolVersion, this.talkToMe, this.priority);
+        return ArtPoll.constructPacket(this.talkToMe, this.priority);
     }
 
     public static byte[] constructPacket(final int talkToMe, final int priority) {
-        return ArtPoll.constructPacket(ArtNetPacket.PROTOCOL_VERSION, talkToMe, priority);
-    }
-
-    @SuppressWarnings("WeakerAccess")
-    public static byte[] constructPacket(final int protocolVersion, final int talkToMe, final int priority) {
-        final byte[] result = ArtNetPacket.constructPacket(ArtNetPacket.HEADER_LENGTH + 4, ArtNetOpCodes.OP_CODE_POLL);
-        result[ArtNetPacket.HEADER_LENGTH] = (byte) ((protocolVersion & 0xff00) >> 8);
-        result[ArtNetPacket.HEADER_LENGTH + 1] = (byte) (protocolVersion & 0x00ff);
-        result[ArtNetPacket.HEADER_LENGTH + 2] = (byte) talkToMe;
-        result[ArtNetPacket.HEADER_LENGTH + 3] = (byte) priority;
+        final byte[] result = ArtNetPacket.constructPacket(ArtPoll.PACKET_LENGTH, ArtNetOpCodes.OP_CODE_POLL);
+        result[ArtNetPacket.FULL_HEADER_LENGTH] = (byte) talkToMe;
+        result[ArtNetPacket.FULL_HEADER_LENGTH + 1] = (byte) priority;
         return result;
     }
 
@@ -95,8 +75,7 @@ public class ArtPoll extends ArtNetPacket {
         if (this.getOpCode() != ArtNetOpCodes.OP_CODE_POLL) {
             throw new IllegalArgumentException("Provided data specifies a wrong OpCode");
         }
-        this.protocolVersion = (data[ArtNetPacket.HEADER_LENGTH] << 8) | data[ArtNetPacket.HEADER_LENGTH + 1];
-        this.talkToMe = data[ArtNetPacket.HEADER_LENGTH + 2];
-        this.priority = data[ArtNetPacket.HEADER_LENGTH + 3];
+        this.talkToMe = data[ArtNetPacket.FULL_HEADER_LENGTH];
+        this.priority = data[ArtNetPacket.FULL_HEADER_LENGTH + 1];
     }
 }
