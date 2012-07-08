@@ -78,4 +78,37 @@ public class ArtPoll extends ArtNetPacket {
         this.talkToMe = data[ArtNetPacket.FULL_HEADER_LENGTH];
         this.priority = data[ArtNetPacket.FULL_HEADER_LENGTH + 1];
     }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ArtPoll)) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+
+        final ArtPoll artPoll = (ArtPoll) o;
+
+        if (this.priority != artPoll.priority) {
+            return false;
+        }
+        //noinspection RedundantIfStatement
+        if (this.talkToMe != artPoll.talkToMe) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = (31 * result) + this.talkToMe;
+        result = (31 * result) + this.priority;
+        return result;
+    }
 }

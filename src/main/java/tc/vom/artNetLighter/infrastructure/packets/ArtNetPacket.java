@@ -143,12 +143,21 @@ public abstract class ArtNetPacket implements ArtNetOpCodes {
 
         final ArtNetPacket that = (ArtNetPacket) o;
 
-        return this.opCode == that.opCode;
+        if (this.opCode != that.opCode) {
+            return false;
+        }
+        //noinspection RedundantIfStatement
+        if (this.protocolVersion != that.protocolVersion) {
+            return false;
+        }
 
+        return true;
     }
 
     @Override
     public int hashCode() {
-        return this.opCode;
+        int result = this.opCode;
+        result = (31 * result) + this.protocolVersion;
+        return result;
     }
 }

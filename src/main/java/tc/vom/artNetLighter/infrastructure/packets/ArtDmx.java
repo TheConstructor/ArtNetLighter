@@ -20,6 +20,8 @@ package tc.vom.artNetLighter.infrastructure.packets;
 import tc.vom.artNetLighter.infrastructure.ArtNetToolkit;
 import tc.vom.artNetLighter.infrastructure.constants.ArtNetOpCodes;
 
+import java.util.Arrays;
+
 /**
  * Used to hold the data of an ArtDmx-Packet. Approximately every 4 Seconds all DMX-Values should be retransmitted.
  */
@@ -117,5 +119,50 @@ public class ArtDmx extends ArtNetPacket {
         this.portAddress = ArtNetToolkit.get2BytesLowToHigh(pData, ArtNetPacket.FULL_HEADER_LENGTH + 2);
         this.length = ArtNetToolkit.get2BytesHighToLow(pData, ArtNetPacket.FULL_HEADER_LENGTH + 4);
         this.data = ArtNetToolkit.copyBytesFromArray(pData, ArtNetPacket.FULL_HEADER_LENGTH + 6, this.length);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ArtDmx)) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+
+        final ArtDmx artDmx = (ArtDmx) o;
+
+        if (this.length != artDmx.length) {
+            return false;
+        }
+        if (this.physical != artDmx.physical) {
+            return false;
+        }
+        if (this.portAddress != artDmx.portAddress) {
+            return false;
+        }
+        if (this.sequence != artDmx.sequence) {
+            return false;
+        }
+        //noinspection RedundantIfStatement
+        if (!Arrays.equals(this.data, artDmx.data)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = (31 * result) + this.sequence;
+        result = (31 * result) + this.physical;
+        result = (31 * result) + this.portAddress;
+        result = (31 * result) + this.length;
+        result = (31 * result) + ((this.data != null) ? Arrays.hashCode(this.data) : 0);
+        return result;
     }
 }
