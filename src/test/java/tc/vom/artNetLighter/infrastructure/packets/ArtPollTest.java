@@ -36,6 +36,8 @@ public class ArtPollTest {
         assertEquals("ProtocolVersion", ArtNetPacket.PROTOCOL_VERSION, artPoll.getProtocolVersion());
         assertEquals("TalkToMe", 0x06, artPoll.getTalkToMe());
         assertEquals("Priority", 0x00, artPoll.getPriority());
+
+        assertEquals("parsePacket", artPoll, ArtNetPacket.parsePacket(ArtPollTest.captured_data1));
     }
 
     @Test

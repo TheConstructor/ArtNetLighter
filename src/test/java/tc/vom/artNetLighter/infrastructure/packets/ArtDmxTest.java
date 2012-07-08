@@ -40,6 +40,8 @@ public class ArtDmxTest {
         assertEquals("PortAddress", 0, artDmx.getPortAddress());
         assertEquals("Length", 512, artDmx.getLength());
         assertArrayEquals("Data", ArtDmxTest.captured_data1_dmx, artDmx.getData());
+
+        assertEquals("parsePacket", artDmx, ArtNetPacket.parsePacket(ArtDmxTest.captured_data1));
     }
 
     @Test

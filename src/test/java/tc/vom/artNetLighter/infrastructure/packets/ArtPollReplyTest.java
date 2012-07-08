@@ -67,6 +67,8 @@ public class ArtPollReplyTest {
         assertEquals("BindIndex", 0, artPollReply.getBindIndex());
         assertEquals("Status2", 0, artPollReply.getStatus2());
         assertArrayEquals("Filler", new byte[0], artPollReply.getFiller());
+
+        assertEquals("parsePacket", artPollReply, ArtNetPacket.parsePacket(ArtPollReplyTest.captured_data1));
     }
 
     @Test
