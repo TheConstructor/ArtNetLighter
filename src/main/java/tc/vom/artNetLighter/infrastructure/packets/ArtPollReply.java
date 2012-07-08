@@ -4,7 +4,9 @@ import tc.vom.artNetLighter.infrastructure.constants.ArtNetNodeReportCodes;
 import tc.vom.artNetLighter.infrastructure.constants.ArtNetOpCodes;
 import tc.vom.artNetLighter.infrastructure.constants.ArtNetStyleCodes;
 
-import static tc.vom.artNetLighter.infrastructure.ArtNetToolkit.copyToArray;
+import java.util.Arrays;
+
+import static tc.vom.artNetLighter.infrastructure.ArtNetToolkit.*;
 
 /**
  * Used to hold the data of an ArtPollReply-Packet.
@@ -12,7 +14,9 @@ import static tc.vom.artNetLighter.infrastructure.ArtNetToolkit.copyToArray;
 public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtNetNodeReportCodes {
 
     public static final byte[] SPARE_BYTES = new byte[]{0, 0, 0};
-    public static final byte[] FILLER_BYTES = new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    public static final byte[] FILLER_BYTES = new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+    public static final int PACKET_LENGTH = ArtNetPacket.HEADER_LENGTH + 203;
     /**
      * 4 Byte IP-Address
      */
@@ -290,7 +294,119 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
 
     @Override
     public byte[] constructPacket() {
-        return ArtNetPacket.constructPacket(0, 0);
+        return ArtPollReply.constructPacket(ipAddress, port, versionInfo, net, subNet, oem, ubea, status1, estaManufacturer, shortName, longName, nodeReport, numPorts, portTypes, goodInput, goodOutput, universesIn, universesOut, video, macro, remote, spare, style, macAddress, bindIP, bindIndex, status2, filler);
+    }
+
+    public int getIpAddress() {
+        return ipAddress;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public int getVersionInfo() {
+        return versionInfo;
+    }
+
+    public int getNet() {
+        return net;
+    }
+
+    public int getSubNet() {
+        return subNet;
+    }
+
+    public int getOem() {
+        return oem;
+    }
+
+    public int getUbea() {
+        return ubea;
+    }
+
+    public int getStatus1() {
+        return status1;
+    }
+
+    public int getEstaManufacturer() {
+        return estaManufacturer;
+    }
+
+    public String getShortName() {
+        return shortName;
+    }
+
+    public String getLongName() {
+        return longName;
+    }
+
+    public String getNodeReport() {
+        return nodeReport;
+    }
+
+    public int getNumPorts() {
+        return numPorts;
+    }
+
+    public byte[] getPortTypes() {
+        return portTypes;
+    }
+
+    public byte[] getGoodInput() {
+        return goodInput;
+    }
+
+    public byte[] getGoodOutput() {
+        return goodOutput;
+    }
+
+    public byte[] getUniversesIn() {
+        return universesIn;
+    }
+
+    public byte[] getUniversesOut() {
+        return universesOut;
+    }
+
+    public int getVideo() {
+        return video;
+    }
+
+    public int getMacro() {
+        return macro;
+    }
+
+    public int getRemote() {
+        return remote;
+    }
+
+    public byte[] getSpare() {
+        return spare;
+    }
+
+    public int getStyle() {
+        return style;
+    }
+
+    public byte[] getMacAddress() {
+        return macAddress;
+    }
+
+    public int getBindIP() {
+        return bindIP;
+    }
+
+    public int getBindIndex() {
+        return bindIndex;
+    }
+
+    public int getStatus2() {
+        return status2;
+    }
+
+    public byte[] getFiller() {
+        return filler;
     }
 
     public static byte[] constructPacket(int ipAddress, int port, int versionInfo, int net, int subNet, int oem, int ubea, int status1, int estaManufacturer, String shortName, String longName, String nodeReport, int numPorts, byte[] portTypes, byte[] goodInput, byte[] goodOutput, byte[] universesIn, byte[] universesOut, int video, int macro, int remote, byte[] spare, int style, byte[] macAddress, int bindIP, int bindIndex, int status2, byte[] filler) {
@@ -332,29 +448,21 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
         if (filler.length > 26)
             throw new IllegalArgumentException("Maximum filler.length is 26");
 
-        byte[] result = ArtNetPacket.constructPacket(ArtNetPacket.HEADER_LENGTH + 2, ArtNetOpCodes.OP_CODE_POLL_REPLY);
+        byte[] result = ArtNetPacket.constructPacket(ArtNetPacket.HEADER_LENGTH + 229, ArtNetOpCodes.OP_CODE_POLL_REPLY);
 
-        result[ArtNetPacket.HEADER_LENGTH] = (byte) ((ipAddress >> 24) & 0xff);
-        result[ArtNetPacket.HEADER_LENGTH + 1] = (byte) ((ipAddress >> 16) & 0xff);
-        result[ArtNetPacket.HEADER_LENGTH + 2] = (byte) ((ipAddress >> 8) & 0xff);
-        result[ArtNetPacket.HEADER_LENGTH + 3] = (byte) (ipAddress & 0xff);
-        result[ArtNetPacket.HEADER_LENGTH + 4] = (byte) (port & 0xff);
-        result[ArtNetPacket.HEADER_LENGTH + 5] = (byte) ((port & 0xff00) >> 8);
-        result[ArtNetPacket.HEADER_LENGTH + 6] = (byte) ((versionInfo & 0xff00) >> 8);
-        result[ArtNetPacket.HEADER_LENGTH + 7] = (byte) (versionInfo & 0xff);
+        set4BytesHighToLow(ipAddress, result, ArtNetPacket.HEADER_LENGTH);
+        set2BytesLowToHigh(port, result, ArtNetPacket.HEADER_LENGTH + 4);
+        set2BytesHighToLow(versionInfo, result, ArtNetPacket.HEADER_LENGTH + 6);
         result[ArtNetPacket.HEADER_LENGTH + 8] = (byte) (net & 0x7f);
         result[ArtNetPacket.HEADER_LENGTH + 9] = (byte) (subNet & 0x0f);
-        result[ArtNetPacket.HEADER_LENGTH + 10] = (byte) ((oem & 0xff00) >> 8);
-        result[ArtNetPacket.HEADER_LENGTH + 11] = (byte) (oem & 0xff);
+        set2BytesHighToLow(oem, result, ArtNetPacket.HEADER_LENGTH + 10);
         result[ArtNetPacket.HEADER_LENGTH + 12] = (byte) ubea;
         result[ArtNetPacket.HEADER_LENGTH + 13] = (byte) status1;
-        result[ArtNetPacket.HEADER_LENGTH + 14] = (byte) (estaManufacturer & 0xff);
-        result[ArtNetPacket.HEADER_LENGTH + 15] = (byte) ((estaManufacturer & 0xff00) >> 8);
+        set2BytesLowToHigh(estaManufacturer, result, ArtNetPacket.HEADER_LENGTH + 14);
         copyToArray(shortName, result, ArtNetPacket.HEADER_LENGTH + 16);
         copyToArray(longName, result, ArtNetPacket.HEADER_LENGTH + 34);
         copyToArray(nodeReport, result, ArtNetPacket.HEADER_LENGTH + 98);
-        result[ArtNetPacket.HEADER_LENGTH + 162] = (byte) ((numPorts & 0xff00) >> 8);
-        result[ArtNetPacket.HEADER_LENGTH + 163] = (byte) (numPorts & 0xff);
+        set2BytesHighToLow(numPorts, result, ArtNetPacket.HEADER_LENGTH + 162);
         copyToArray(portTypes, result, ArtNetPacket.HEADER_LENGTH + 164);
         copyToArray(goodInput, result, ArtNetPacket.HEADER_LENGTH + 168);
         copyToArray(goodOutput, result, ArtNetPacket.HEADER_LENGTH + 172);
@@ -366,13 +474,138 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
         copyToArray(spare, result, ArtNetPacket.HEADER_LENGTH + 187);
         result[ArtNetPacket.HEADER_LENGTH + 190] = (byte) style;
         copyToArray(macAddress, result, ArtNetPacket.HEADER_LENGTH + 191);
-        result[ArtNetPacket.HEADER_LENGTH + 197] = (byte) ((bindIP >> 24) & 0xff);
-        result[ArtNetPacket.HEADER_LENGTH + 198] = (byte) ((bindIP >> 16) & 0xff);
-        result[ArtNetPacket.HEADER_LENGTH + 199] = (byte) ((bindIP >> 8) & 0xff);
-        result[ArtNetPacket.HEADER_LENGTH + 200] = (byte) (bindIP & 0xff);
+        set4BytesHighToLow(bindIP, result, ArtNetPacket.HEADER_LENGTH + 197);
         result[ArtNetPacket.HEADER_LENGTH + 201] = (byte) bindIndex;
         result[ArtNetPacket.HEADER_LENGTH + 202] = (byte) status2;
         copyToArray(filler, result, ArtNetPacket.HEADER_LENGTH + 203);
+        return result;
+    }
+
+    public ArtPollReply(byte[] data) {
+        super(data);
+        if (data.length < ArtPoll.PACKET_LENGTH) {
+            throw new IllegalArgumentException("Minimum size for ArtPollReply is " + ArtPollReply.PACKET_LENGTH);
+        }
+        if (this.getOpCode() != ArtNetOpCodes.OP_CODE_POLL_REPLY) {
+            throw new IllegalArgumentException("Provided data specifies a wrong OpCode");
+        }
+
+        this.ipAddress = get4BytesHighToLow(data, ArtNetPacket.HEADER_LENGTH);
+        this.port = get2BytesLowToHigh(data, ArtNetPacket.HEADER_LENGTH + 4);
+        this.versionInfo = get2BytesHighToLow(data, ArtNetPacket.HEADER_LENGTH + 6);
+        this.net = data[ArtNetPacket.HEADER_LENGTH + 8] & 0x7f;
+        this.subNet = data[ArtNetPacket.HEADER_LENGTH + 9] & 0x0f;
+        this.oem = get2BytesHighToLow(data, ArtNetPacket.HEADER_LENGTH + 10);
+        this.ubea = data[ArtNetPacket.HEADER_LENGTH + 12];
+        this.status1 = data[ArtNetPacket.HEADER_LENGTH + 13];
+        this.estaManufacturer = get2BytesLowToHigh(data, ArtNetPacket.HEADER_LENGTH + 14);
+        this.shortName = copyStringFromArray(data, ArtNetPacket.HEADER_LENGTH + 16, 17);
+        this.longName = copyStringFromArray(data, ArtNetPacket.HEADER_LENGTH + 34, 63);
+        this.nodeReport = copyStringFromArray(data, ArtNetPacket.HEADER_LENGTH + 98, 63);
+        this.numPorts = get2BytesHighToLow(data, ArtNetPacket.HEADER_LENGTH + 162);
+        this.portTypes = copyBytesFromArray(data, ArtNetPacket.HEADER_LENGTH + 164, 4);
+        this.goodInput = copyBytesFromArray(data, ArtNetPacket.HEADER_LENGTH + 168, 4);
+        this.goodOutput = copyBytesFromArray(data, ArtNetPacket.HEADER_LENGTH + 172, 4);
+        this.universesIn = copyBytesFromArray(data, ArtNetPacket.HEADER_LENGTH + 176, 4);
+        this.universesOut = copyBytesFromArray(data, ArtNetPacket.HEADER_LENGTH + 180, 4);
+        this.video = data[ArtNetPacket.HEADER_LENGTH + 184];
+        this.macro = data[ArtNetPacket.HEADER_LENGTH + 185];
+        this.remote = data[ArtNetPacket.HEADER_LENGTH + 186];
+        this.spare = copyBytesFromArray(data, ArtNetPacket.HEADER_LENGTH + 187, 3);
+        this.style = data[ArtNetPacket.HEADER_LENGTH + 190];
+        this.macAddress = copyBytesFromArray(data, ArtNetPacket.HEADER_LENGTH + 191, 6);
+        if (data.length > ArtNetPacket.HEADER_LENGTH + 201) {
+            this.bindIP = get4BytesHighToLow(data, ArtNetPacket.HEADER_LENGTH + 197);
+            this.bindIndex = data[ArtNetPacket.HEADER_LENGTH + 201];
+        } else {
+            this.bindIP = 0;
+            this.bindIndex = 0;
+        }
+        if (data.length > ArtNetPacket.HEADER_LENGTH + 202) {
+            this.status2 = data[ArtNetPacket.HEADER_LENGTH + 202];
+        } else {
+            this.status2 = 0;
+        }
+        if (data.length > ArtNetPacket.HEADER_LENGTH + 203) {
+            this.filler = Arrays.copyOfRange(data, ArtNetPacket.HEADER_LENGTH + 203, data.length);
+        } else {
+            this.filler = new byte[0];
+        }
+
+        // Old specification is that high and low nibble are to be the same, but we only need the information once.
+        for (int i = 0; i < 4; i++) {
+            this.universesIn[i] = (byte) (this.universesIn[i] & 0xf);
+            this.universesOut[i] = (byte) (this.universesOut[i] & 0xf);
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ArtPollReply)) return false;
+        if (!super.equals(o)) return false;
+
+        ArtPollReply that = (ArtPollReply) o;
+
+        if (bindIP != that.bindIP) return false;
+        if (bindIndex != that.bindIndex) return false;
+        if (estaManufacturer != that.estaManufacturer) return false;
+        if (ipAddress != that.ipAddress) return false;
+        if (macro != that.macro) return false;
+        if (net != that.net) return false;
+        if (numPorts != that.numPorts) return false;
+        if (oem != that.oem) return false;
+        if (port != that.port) return false;
+        if (remote != that.remote) return false;
+        if (status1 != that.status1) return false;
+        if (status2 != that.status2) return false;
+        if (style != that.style) return false;
+        if (subNet != that.subNet) return false;
+        if (ubea != that.ubea) return false;
+        if (versionInfo != that.versionInfo) return false;
+        if (video != that.video) return false;
+        if (!Arrays.equals(goodInput, that.goodInput)) return false;
+        if (!Arrays.equals(goodOutput, that.goodOutput)) return false;
+        if (!longName.equals(that.longName)) return false;
+        if (!Arrays.equals(macAddress, that.macAddress)) return false;
+        if (!nodeReport.equals(that.nodeReport)) return false;
+        if (!Arrays.equals(portTypes, that.portTypes)) return false;
+        if (!shortName.equals(that.shortName)) return false;
+        if (!Arrays.equals(universesIn, that.universesIn)) return false;
+        if (!Arrays.equals(universesOut, that.universesOut)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + ipAddress;
+        result = 31 * result + port;
+        result = 31 * result + versionInfo;
+        result = 31 * result + net;
+        result = 31 * result + subNet;
+        result = 31 * result + oem;
+        result = 31 * result + ubea;
+        result = 31 * result + status1;
+        result = 31 * result + estaManufacturer;
+        result = 31 * result + shortName.hashCode();
+        result = 31 * result + longName.hashCode();
+        result = 31 * result + nodeReport.hashCode();
+        result = 31 * result + numPorts;
+        result = 31 * result + Arrays.hashCode(portTypes);
+        result = 31 * result + Arrays.hashCode(goodInput);
+        result = 31 * result + Arrays.hashCode(goodOutput);
+        result = 31 * result + Arrays.hashCode(universesIn);
+        result = 31 * result + Arrays.hashCode(universesOut);
+        result = 31 * result + video;
+        result = 31 * result + macro;
+        result = 31 * result + remote;
+        result = 31 * result + style;
+        result = 31 * result + Arrays.hashCode(macAddress);
+        result = 31 * result + bindIP;
+        result = 31 * result + bindIndex;
+        result = 31 * result + status2;
         return result;
     }
 }

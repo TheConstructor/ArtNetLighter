@@ -3,6 +3,7 @@ package tc.vom.artNetLighter.infrastructure.packets;
 import tc.vom.artNetLighter.infrastructure.constants.ArtNetOpCodes;
 
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
 /**
  * Represents an Art-Net packet that could be send or received.
@@ -28,6 +29,17 @@ public abstract class ArtNetPacket implements ArtNetOpCodes {
         this.opCode = opCode;
     }
 
+    public ArtNetPacket(byte[] data) {
+        if (data.length < ArtNetPacket.HEADER_LENGTH) {
+            throw new IllegalArgumentException("Minimum size for Packet Header is " + ArtNetPacket.HEADER_LENGTH);
+        }
+        final byte[] header = new byte[ArtNetPacket.ART_NET_ID.length];
+        System.arraycopy(data, 0, header, 0, header.length);
+        if (!Arrays.equals(ArtNetPacket.ART_NET_ID, header))
+            throw new IllegalArgumentException("Packet data must start with ArtNetPacket.ART_NET_ID");
+        this.opCode = (data[9] << 8) | data[8];
+    }
+
     /**
      * 2 Byte OpCode
      */
@@ -41,10 +53,6 @@ public abstract class ArtNetPacket implements ArtNetOpCodes {
 
     public abstract byte[] constructPacket();
 
-    protected byte[] constructPacket(final int bufferLength) {
-        return ArtNetPacket.constructPacket(bufferLength, opCode);
-    }
-
     public static byte[] constructPacket(final int bufferLength, final int opCode) {
         if (bufferLength < ArtNetPacket.HEADER_LENGTH)
             throw new IllegalArgumentException("Header alone needs 10 Bytes");
@@ -53,5 +61,22 @@ public abstract class ArtNetPacket implements ArtNetOpCodes {
         result[8] = (byte) (opCode & 0x00ff);
         result[9] = (byte) ((opCode & 0xff00) >> 8);
         return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ArtNetPacket)) return false;
+
+        ArtNetPacket that = (ArtNetPacket) o;
+
+        if (this.opCode != that.opCode) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return opCode;
     }
 }

@@ -1,5 +1,9 @@
 package tc.vom.artNetLighter.infrastructure;
 
+import tc.vom.artNetLighter.infrastructure.packets.ArtNetPacket;
+
+import java.util.Arrays;
+
 /**
  * Some Art-Net helper functions.
  */
@@ -201,7 +205,77 @@ public class ArtNetToolkit {
         System.arraycopy(from, 0, to, offset, from.length);
     }
 
-    public static <T> void copyToArray(T[] from, T[] to, int offset) {
-        System.arraycopy(from, 0, to, offset, from.length);
+    public static void copyToArray(String from, byte[] to, int offset, int maxLength) {
+        byte[] strBytes = from.getBytes(ArtNetPacket.STRING_CHARSET);
+        if (strBytes.length > maxLength)
+            throw new IllegalArgumentException("String too long");
+        ArtNetToolkit.copyToArray(strBytes, to, offset);
+        Arrays.fill(to, offset + strBytes.length, offset + maxLength, (byte) 0);
+    }
+
+    public static byte[] copyBytesFromArray(byte[] from, int offset, int length) {
+        //return Arrays.copyOfRange(from, offset, offset + length);
+        assert offset >= 0;
+        assert length <= from.length - offset;
+        byte[] result = new byte[length];
+        System.arraycopy(from, offset, result, 0, length);
+        return result;
+    }
+
+    public static String copyStringFromArray(byte[] from, int offset, int length) {
+        final String shortName = new String(from, offset, length, ArtNetPacket.STRING_CHARSET);
+        final int nullTerminator = shortName.indexOf(0);
+        if (nullTerminator != -1) {
+            return shortName.substring(0, nullTerminator);
+        }
+        return shortName;
+    }
+
+    public static int get4BytesHighToLow(byte[] from, int offset) {
+        assert from.length > offset + 3;
+        return ((from[offset] & 0xff) << 24) | ((from[offset + 1] & 0xff) << 16) | ((from[offset + 2] & 0xff) << 8) | (from[offset + 3] & 0xff);
+    }
+
+    public static int get4BytesLowToHigh(byte[] from, int offset) {
+        assert from.length > offset + 3;
+        return ((from[offset + 3] & 0xff) << 24) | ((from[offset + 2] & 0xff) << 16) | ((from[offset + 1] & 0xff) << 8) | (from[offset] & 0xff);
+    }
+
+    public static int get2BytesHighToLow(byte[] from, int offset) {
+        assert from.length > offset + 1;
+        return ((from[offset] & 0xff) << 8) | (from[offset + 1] & 0xff);
+    }
+
+    public static int get2BytesLowToHigh(byte[] from, int offset) {
+        assert from.length > offset + 1;
+        return ((from[offset + 1] & 0xff) << 8) | (from[offset] & 0xff);
+    }
+
+    public static void set4BytesHighToLow(int from, byte[] to, int offset) {
+        assert to.length > offset + 3;
+        to[offset] = (byte) ((from >> 24) & 0xff);
+        to[offset + 1] = (byte) ((from >> 16) & 0xff);
+        to[offset + 2] = (byte) ((from >> 8) & 0xff);
+        to[offset + 3] = (byte) (from & 0xff);
+    }
+
+    public static void set4BytesLowToHigh(int from, byte[] to, int offset) {
+        assert to.length > offset + 3;
+        to[offset + 3] = (byte) ((from >> 24) & 0xff);
+        to[offset + 2] = (byte) ((from >> 16) & 0xff);
+        to[offset + 1] = (byte) ((from >> 8) & 0xff);
+        to[offset] = (byte) (from & 0xff);
+    }
+
+    public static void set2BytesHighToLow(int from, byte[] to, int offset) {
+        assert to.length > offset + 1;
+        to[offset] = (byte) ((from >> 8) & 0xff);
+        to[offset + 1] = (byte) (from & 0xff);
+    }
+
+    public static void set2BytesLowToHigh(int from, byte[] to, int offset) {
+        assert to.length > offset + 1;
+        to[offset + 1] = (byte) ((from >> 8) & 0xff);
+        to[offset] = (byte) (from & 0xff);
     }
 }

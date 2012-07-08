@@ -19,7 +19,7 @@ public class ArtNetPacketTest {
         artNetPacket = new ArtNetPacket(ArtNetOpCodes.OP_CODE_POLL) {
             @Override
             public byte[] constructPacket() {
-                return this.constructPacket(ArtNetPacket.HEADER_LENGTH);
+                return ArtNetPacket.constructPacket(ArtNetPacket.HEADER_LENGTH, ArtNetOpCodes.OP_CODE_POLL);
             }
         };
     }
