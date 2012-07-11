@@ -241,6 +241,12 @@ public class ArtNetToolkit {
         return result;
     }
 
+    public static byte[] copyBytesFromArray(final byte[] from, final int offset) {
+        //return Arrays.copyOfRange(from, offset, offset + length);
+        assert offset >= 0;
+        return ArtNetToolkit.copyBytesFromArray(from, offset, from.length - offset);
+    }
+
     public static String copyStringFromArray(final byte[] from, final int offset, final int length) {
         final String shortName = new String(from, offset, length, ArtNetPacket.STRING_CHARSET);
         final int nullTerminator = shortName.indexOf(0);

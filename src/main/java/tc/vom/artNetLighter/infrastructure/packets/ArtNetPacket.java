@@ -95,38 +95,40 @@ public abstract class ArtNetPacket implements ArtNetOpCodes {
 
     public abstract byte[] constructPacket();
 
-    public static byte[] constructUnversionedPacket(final int bufferLength, final int opCode) {
-        if (bufferLength < ArtNetPacket.SHORT_HEADER_LENGTH) {
+    public static byte[] constructUnversionedPacket(final int packetLength, final int opCode) {
+        if (packetLength < ArtNetPacket.SHORT_HEADER_LENGTH) {
             throw new IllegalArgumentException("Header alone needs 10 Bytes");
         }
-        final byte[] result = new byte[bufferLength];
+        final byte[] result = new byte[packetLength];
         System.arraycopy(ArtNetPacket.ART_NET_ID, 0, result, 0, ArtNetPacket.ART_NET_ID.length);
         set2BytesLowToHigh(opCode, result, 8);
         return result;
     }
 
-    public static byte[] constructPacket(final int bufferLength, final int opCode) {
-        return ArtNetPacket.constructPacket(bufferLength, opCode, ArtNetPacket.PROTOCOL_VERSION);
+    public static byte[] constructPacket(final int packetLength, final int opCode) {
+        return ArtNetPacket.constructPacket(packetLength, opCode, ArtNetPacket.PROTOCOL_VERSION);
     }
 
-    public static byte[] constructPacket(final int bufferLength, final int opCode, final int protocolVersion) {
-        if (bufferLength < ArtNetPacket.FULL_HEADER_LENGTH) {
+    public static byte[] constructPacket(final int packetLength, final int opCode, final int protocolVersion) {
+        if (packetLength < ArtNetPacket.FULL_HEADER_LENGTH) {
             throw new IllegalArgumentException("Header alone needs 10 Bytes");
         }
-        final byte[] result = ArtNetPacket.constructUnversionedPacket(bufferLength, opCode);
+        final byte[] result = ArtNetPacket.constructUnversionedPacket(packetLength, opCode);
         set2BytesHighToLow(protocolVersion, result, 10);
         return result;
     }
 
-    public static ArtNetPacket parsePacket(final byte[] data) {
-        final int opCode = get2BytesLowToHigh(data, 8);
+    public static ArtNetPacket parsePacket(final byte[] pData) {
+        final int opCode = get2BytesLowToHigh(pData, 8);
         switch (opCode) {
             case ArtNetOpCodes.OP_CODE_POLL:
-                return new ArtPoll(data);
+                return new ArtPoll(pData);
             case ArtNetOpCodes.OP_CODE_POLL_REPLY:
-                return new ArtPollReply(data);
+                return new ArtPollReply(pData);
+            case ArtNetOpCodes.OP_CODE_IP_PROGRAM:
+                return new ArtIpProg(pData);
             case ArtNetOpCodes.OP_CODE_DMX:
-                return new ArtDmx(data);
+                return new ArtDmx(pData);
             default:
                 throw new IllegalArgumentException("The packet contains an unhandled OpCode");
         }
