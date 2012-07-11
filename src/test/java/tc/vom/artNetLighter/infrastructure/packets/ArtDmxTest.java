@@ -46,7 +46,7 @@ public class ArtDmxTest {
 
     @Test
     public void testConstructPacket() {
-        final ArtDmx artDmx = new ArtDmx(0, 0, 0, ArtDmxTest.captured_data1_dmx);
+        final ArtDmx artDmx = new ArtDmx((byte) 0, (byte) 0, 0, ArtDmxTest.captured_data1_dmx);
         assertArrayEquals("Generated packet does not match captured package", ArtDmxTest.captured_data1, artDmx.constructPacket());
     }
 }

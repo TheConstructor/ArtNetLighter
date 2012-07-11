@@ -32,13 +32,13 @@ public class ArtDmx extends ArtNetPacket {
      * The sequence number is used to ensure that ArtDmx packets are used in the correct order. When Art-Net is carried over a medium such as the Internet, it is possible that ArtDmx packets will reach the receiver out of order.
      * This field is incremented in the range 0x01 to 0xff to allow the receiving node to resequence packets. The Sequence field is set to 0x00 to disable this feature.
      */
-    private final int sequence;
+    private final byte sequence;
 
     /**
      * 1 Byte Physical.
      * The physical input port from which DMX512 data was input. This field is for information only. Use Universe for data routing.
      */
-    private final int physical;
+    private final byte physical;
 
     /**
      * 2 Byte Port Address.
@@ -58,7 +58,7 @@ public class ArtDmx extends ArtNetPacket {
      */
     private final byte[] data;
 
-    public ArtDmx(final int sequence, final int physical, final int portAddress, final byte[] data) {
+    public ArtDmx(final byte sequence, final byte physical, final int portAddress, final byte[] data) {
         super(ArtNetOpCodes.OP_CODE_DMX);
         this.sequence = sequence;
         this.physical = physical;
@@ -67,11 +67,11 @@ public class ArtDmx extends ArtNetPacket {
         this.data = data;
     }
 
-    public int getSequence() {
+    public byte getSequence() {
         return this.sequence;
     }
 
-    public int getPhysical() {
+    public byte getPhysical() {
         return this.physical;
     }
 
@@ -96,10 +96,10 @@ public class ArtDmx extends ArtNetPacket {
         return ArtDmx.constructPacket(this.sequence, this.physical, this.portAddress, this.data);
     }
 
-    public static byte[] constructPacket(final int sequence, final int physical, final int portAddress, final byte[] data) {
+    public static byte[] constructPacket(final byte sequence, final byte physical, final int portAddress, final byte[] data) {
         final byte[] result = ArtNetPacket.constructPacket(ArtDmx.MINIMUM_PACKET_SIZE + data.length, ArtNetOpCodes.OP_CODE_DMX);
-        result[ArtNetPacket.FULL_HEADER_LENGTH] = (byte) sequence;
-        result[ArtNetPacket.FULL_HEADER_LENGTH + 1] = (byte) physical;
+        result[ArtNetPacket.FULL_HEADER_LENGTH] = sequence;
+        result[ArtNetPacket.FULL_HEADER_LENGTH + 1] = physical;
         ArtNetToolkit.set2BytesLowToHigh(portAddress, result, ArtNetPacket.FULL_HEADER_LENGTH + 2);
         ArtNetToolkit.set2BytesHighToLow(data.length, result, ArtNetPacket.FULL_HEADER_LENGTH + 4);
         ArtNetToolkit.copyToArray(data, result, ArtNetPacket.FULL_HEADER_LENGTH + 6);

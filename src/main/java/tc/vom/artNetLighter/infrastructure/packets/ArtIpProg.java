@@ -47,13 +47,13 @@ public class ArtIpProg extends ArtNetPacket {
      * 1 Program Subnet Mask
      * 0 Program Port
      */
-    private final int command;
+    private final byte command;
 
     /**
-     * 2 Byte Filler.
+     * 1 Byte Filler.
      * Pad data structure for word alignment
      */
-    private final int filler2;
+    private final byte filler2;
 
     /**
      * 4 Bytes ProgIp.
@@ -78,7 +78,7 @@ public class ArtIpProg extends ArtNetPacket {
      */
     private final byte[] spare;
 
-    public ArtIpProg(final int command, final int progIp, final int progSm, final int progPort) {
+    public ArtIpProg(final byte command, final int progIp, final int progSm, final int progPort) {
         super(ArtNetOpCodes.OP_CODE_IP_PROGRAM);
         this.filler1 = ArtIpProg.FILLER1;
         this.command = command;
@@ -93,11 +93,11 @@ public class ArtIpProg extends ArtNetPacket {
         return this.filler1;
     }
 
-    public int getCommand() {
+    public byte getCommand() {
         return this.command;
     }
 
-    public int getFiller2() {
+    public byte getFiller2() {
         return this.filler2;
     }
 
@@ -122,11 +122,11 @@ public class ArtIpProg extends ArtNetPacket {
         return ArtIpProg.constructPacket(this.filler1, this.command, this.filler2, this.progIp, this.progSm, this.progPort, this.spare);
     }
 
-    public static byte[] constructPacket(final int filler1, final int command, final int filler2, final int progIp, final int progSm, final int progPort, final byte[] spare) {
+    public static byte[] constructPacket(final int filler1, final byte command, final byte filler2, final int progIp, final int progSm, final int progPort, final byte[] spare) {
         final byte[] pData = ArtNetPacket.constructPacket(ArtIpProg.MINIMUM_PACKET_LENGTH + spare.length, ArtNetOpCodes.OP_CODE_IP_PROGRAM);
         set2BytesHighToLow(filler1, pData, ArtNetPacket.FULL_HEADER_LENGTH);
-        pData[ArtNetPacket.FULL_HEADER_LENGTH + 2] = (byte) command;
-        pData[ArtNetPacket.FULL_HEADER_LENGTH + 3] = (byte) filler2;
+        pData[ArtNetPacket.FULL_HEADER_LENGTH + 2] = command;
+        pData[ArtNetPacket.FULL_HEADER_LENGTH + 3] = filler2;
         set4BytesHighToLow(progIp, pData, ArtNetPacket.FULL_HEADER_LENGTH + 4);
         set4BytesHighToLow(progSm, pData, ArtNetPacket.FULL_HEADER_LENGTH + 8);
         set2BytesHighToLow(progPort, pData, ArtNetPacket.FULL_HEADER_LENGTH + 12);

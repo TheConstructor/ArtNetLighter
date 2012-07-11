@@ -31,27 +31,27 @@ public class ArtPoll extends ArtNetPacket {
     /**
      * 1 Byte TalkToMe
      */
-    private final int talkToMe;
+    private final byte talkToMe;
 
     /**
      * 1 Byte Priority
      */
-    private final int priority;
+    private final byte priority;
 
     /**
      * @param talkToMe
      */
-    public ArtPoll(final int talkToMe, final int priority) {
+    public ArtPoll(final byte talkToMe, final byte priority) {
         super(ArtNetOpCodes.OP_CODE_POLL);
         this.talkToMe = talkToMe;
         this.priority = priority;
     }
 
-    public int getTalkToMe() {
+    public byte getTalkToMe() {
         return this.talkToMe;
     }
 
-    public int getPriority() {
+    public byte getPriority() {
         return this.priority;
     }
 
@@ -60,10 +60,10 @@ public class ArtPoll extends ArtNetPacket {
         return ArtPoll.constructPacket(this.talkToMe, this.priority);
     }
 
-    public static byte[] constructPacket(final int talkToMe, final int priority) {
+    public static byte[] constructPacket(final byte talkToMe, final byte priority) {
         final byte[] result = ArtNetPacket.constructPacket(ArtPoll.PACKET_LENGTH, ArtNetOpCodes.OP_CODE_POLL);
-        result[ArtNetPacket.FULL_HEADER_LENGTH] = (byte) talkToMe;
-        result[ArtNetPacket.FULL_HEADER_LENGTH + 1] = (byte) priority;
+        result[ArtNetPacket.FULL_HEADER_LENGTH] = talkToMe;
+        result[ArtNetPacket.FULL_HEADER_LENGTH + 1] = priority;
         return result;
     }
 

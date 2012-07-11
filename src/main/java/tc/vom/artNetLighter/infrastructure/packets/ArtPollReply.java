@@ -52,12 +52,12 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
     /**
      * 7 Bit Net Switch
      */
-    private final int net;
+    private final byte net;
 
     /**
      * 4 Bit Sub Switch
      */
-    private final int subNet;
+    private final byte subNet;
 
     /**
      * 2 Byte Oem Value (High-Byte first).
@@ -71,10 +71,10 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
      * This field contains the firmware version of the User Bios Extension Area (UBEA).
      * If the UBEA is not programmed, this field contains zero.
      */
-    private final int ubea;
+    private final byte ubea;
 
     /**
-     * 2 Byte Status1 General Status register containing bit fields as follows:
+     * 1 Byte Status1 General Status register containing bit fields as follows:
      * 7-6 Indicator state:
      * - 00 Indicator state unknown.
      * - 01 Indicators in Locate Mode.
@@ -97,7 +97,7 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
      * - 1 = UBEA present
      * -
      */
-    private final int status1;
+    private final byte status1;
 
     /**
      * 2 Byte ESTA manufacturer code (Lo-Byte first)
@@ -185,7 +185,7 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
      * 1 Byte Video.
      * Set to 00 when video display is showing local data. Set to 01 when video is showing ethernet data.
      */
-    private final int video;
+    private final byte video;
 
     /**
      * 1 Byte Macro.
@@ -202,7 +202,7 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
      * 1 Set – Macro 2 active.
      * 0 Set – Macro 1 active.
      */
-    private final int macro;
+    private final byte macro;
 
     /**
      * 1 Byte Remote.
@@ -219,7 +219,7 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
      * 1 Set – Remote 2 active.
      * 0 Set – Remote 1 active.
      */
-    private final int remote;
+    private final byte remote;
 
     /**
      * 3 Byte Spare.
@@ -232,7 +232,7 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
      *
      * @see ArtNetStyleCodes
      */
-    private final int style;
+    private final byte style;
 
     /**
      * 6 Byte Mac Address (High-Byte first)
@@ -250,7 +250,7 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
      * 1 Byte Bind Index.
      * Set to zero if no binding, otherwise this number represents the order of bound devices. A lower number means closer to root device. A value of 1 means root device.
      */
-    private final int bindIndex;
+    private final byte bindIndex;
 
     /**
      * 1 Byte Status 2.
@@ -265,7 +265,7 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
      * - Clr = Node supports 8 bit Port-Address (Art-Net II).
      * - Set = Node supports 15 bit Port-Address (Art-Net 3).
      */
-    private final int status2;
+    private final byte status2;
 
     /**
      * 26 Byte Filler.
@@ -273,7 +273,7 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
      */
     private final byte[] filler;
 
-    public ArtPollReply(final int ipAddress, final int port, final int versionInfo, final int net, final int subNet, final int oem, final int ubea, final int status1, final int estaManufacturer, final String shortName, final String longName, final String nodeReport, final int numPorts, final byte[] portTypes, final byte[] goodInput, final byte[] goodOutput, final byte[] universesIn, final byte[] universesOut, final int video, final int macro, final int remote, final int style, final byte[] macAddress, final int bindIP, final int bindIndex, final int status2) {
+    public ArtPollReply(final int ipAddress, final int port, final int versionInfo, final byte net, final byte subNet, final int oem, final byte ubea, final byte status1, final int estaManufacturer, final String shortName, final String longName, final String nodeReport, final int numPorts, final byte[] portTypes, final byte[] goodInput, final byte[] goodOutput, final byte[] universesIn, final byte[] universesOut, final byte video, final byte macro, final byte remote, final byte style, final byte[] macAddress, final int bindIP, final byte bindIndex, final byte status2) {
         super(ArtNetOpCodes.OP_CODE_POLL_REPLY);
         this.ipAddress = ipAddress;
         this.port = port;
@@ -305,11 +305,6 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
         this.filler = ArtPollReply.FILLER_BYTES;
     }
 
-    @Override
-    public byte[] constructPacket() {
-        return ArtPollReply.constructPacket(this.ipAddress, this.port, this.versionInfo, this.net, this.subNet, this.oem, this.ubea, this.status1, this.estaManufacturer, this.shortName, this.longName, this.nodeReport, this.numPorts, this.portTypes, this.goodInput, this.goodOutput, this.universesIn, this.universesOut, this.video, this.macro, this.remote, this.spare, this.style, this.macAddress, this.bindIP, this.bindIndex, this.status2, this.filler);
-    }
-
     public int getIpAddress() {
         return this.ipAddress;
     }
@@ -322,11 +317,11 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
         return this.versionInfo;
     }
 
-    public int getNet() {
+    public byte getNet() {
         return this.net;
     }
 
-    public int getSubNet() {
+    public byte getSubNet() {
         return this.subNet;
     }
 
@@ -334,11 +329,11 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
         return this.oem;
     }
 
-    public int getUbea() {
+    public byte getUbea() {
         return this.ubea;
     }
 
-    public int getStatus1() {
+    public byte getStatus1() {
         return this.status1;
     }
 
@@ -382,15 +377,15 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
         return this.universesOut;
     }
 
-    public int getVideo() {
+    public byte getVideo() {
         return this.video;
     }
 
-    public int getMacro() {
+    public byte getMacro() {
         return this.macro;
     }
 
-    public int getRemote() {
+    public byte getRemote() {
         return this.remote;
     }
 
@@ -398,7 +393,7 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
         return this.spare;
     }
 
-    public int getStyle() {
+    public byte getStyle() {
         return this.style;
     }
 
@@ -410,11 +405,11 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
         return this.bindIP;
     }
 
-    public int getBindIndex() {
+    public byte getBindIndex() {
         return this.bindIndex;
     }
 
-    public int getStatus2() {
+    public byte getStatus2() {
         return this.status2;
     }
 
@@ -422,8 +417,12 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
         return this.filler;
     }
 
-    @SuppressWarnings("WeakerAccess")
-    public static byte[] constructPacket(final int ipAddress, final int port, final int versionInfo, final int net, final int subNet, final int oem, final int ubea, final int status1, final int estaManufacturer, String shortName, String longName, String nodeReport, final int numPorts, final byte[] portTypes, final byte[] goodInput, final byte[] goodOutput, final byte[] universesIn, final byte[] universesOut, final int video, final int macro, final int remote, final byte[] spare, final int style, final byte[] macAddress, final int bindIP, final int bindIndex, final int status2, final byte[] filler) {
+    @Override
+    public byte[] constructPacket() {
+        return ArtPollReply.constructPacket(this.ipAddress, this.port, this.versionInfo, this.net, this.subNet, this.oem, this.ubea, this.status1, this.estaManufacturer, this.shortName, this.longName, this.nodeReport, this.numPorts, this.portTypes, this.goodInput, this.goodOutput, this.universesIn, this.universesOut, this.video, this.macro, this.remote, this.spare, this.style, this.macAddress, this.bindIP, this.bindIndex, this.status2, this.filler);
+    }
+
+    public static byte[] constructPacket(final int ipAddress, final int port, final int versionInfo, final byte net, final byte subNet, final int oem, final byte ubea, final byte status1, final int estaManufacturer, String shortName, String longName, String nodeReport, final int numPorts, final byte[] portTypes, final byte[] goodInput, final byte[] goodOutput, final byte[] universesIn, final byte[] universesOut, final byte video, final byte macro, final byte remote, final byte[] spare, final byte style, final byte[] macAddress, final int bindIP, final byte bindIndex, final byte status2, final byte[] filler) {
         if (shortName == null) {
             shortName = "";
         }
@@ -439,8 +438,7 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
         return ArtPollReply.constructPacket(ipAddress, port, versionInfo, net, subNet, oem, ubea, status1, estaManufacturer, shortNameBytes, longNameBytes, nodeReportBytes, numPorts, portTypes, goodInput, goodOutput, universesIn, universesOut, video, macro, remote, spare, style, macAddress, bindIP, bindIndex, status2, filler);
     }
 
-    @SuppressWarnings("WeakerAccess")
-    public static byte[] constructPacket(final int ipAddress, final int port, final int versionInfo, final int net, final int subNet, final int oem, final int ubea, final int status1, final int estaManufacturer, final byte[] shortName, final byte[] longName, final byte[] nodeReport, final int numPorts, final byte[] portTypes, final byte[] goodInput, final byte[] goodOutput, final byte[] universesIn, final byte[] universesOut, final int video, final int macro, final int remote, final byte[] spare, final int style, final byte[] macAddress, final int bindIP, final int bindIndex, final int status2, final byte[] filler) {
+    public static byte[] constructPacket(final int ipAddress, final int port, final int versionInfo, final byte net, final byte subNet, final int oem, final byte ubea, final byte status1, final int estaManufacturer, final byte[] shortName, final byte[] longName, final byte[] nodeReport, final int numPorts, final byte[] portTypes, final byte[] goodInput, final byte[] goodOutput, final byte[] universesIn, final byte[] universesOut, final byte video, final byte macro, final byte remote, final byte[] spare, final byte style, final byte[] macAddress, final int bindIP, final byte bindIndex, final byte status2, final byte[] filler) {
         if ((shortName.length > 17) && ((shortName.length != 18) || (shortName[17] != 0))) {
             throw new IllegalArgumentException("Short Name has a maximum length of 17 Bytes.");
         }
@@ -469,7 +467,7 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
             throw new IllegalArgumentException("Maximum universesOut.length is 4");
         }
         if (spare.length > 3) {
-            throw new IllegalArgumentException("Maximum spare.length is 4");
+            throw new IllegalArgumentException("Maximum spare.length is 3");
         }
         if (macAddress.length > 6) {
             throw new IllegalArgumentException("Maximum macAddress.length is 6");
@@ -486,8 +484,8 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
         result[ArtNetPacket.SHORT_HEADER_LENGTH + 8] = (byte) (net & 0x7f);
         result[ArtNetPacket.SHORT_HEADER_LENGTH + 9] = (byte) (subNet & 0x0f);
         set2BytesHighToLow(oem, result, ArtNetPacket.SHORT_HEADER_LENGTH + 10);
-        result[ArtNetPacket.SHORT_HEADER_LENGTH + 12] = (byte) ubea;
-        result[ArtNetPacket.SHORT_HEADER_LENGTH + 13] = (byte) status1;
+        result[ArtNetPacket.SHORT_HEADER_LENGTH + 12] = ubea;
+        result[ArtNetPacket.SHORT_HEADER_LENGTH + 13] = status1;
         set2BytesLowToHigh(estaManufacturer, result, ArtNetPacket.SHORT_HEADER_LENGTH + 14);
         copyToArray(shortName, result, ArtNetPacket.SHORT_HEADER_LENGTH + 16);
         copyToArray(longName, result, ArtNetPacket.SHORT_HEADER_LENGTH + 34);
@@ -498,15 +496,15 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
         copyToArray(goodOutput, result, ArtNetPacket.SHORT_HEADER_LENGTH + 172);
         copyToArray(universesIn, result, ArtNetPacket.SHORT_HEADER_LENGTH + 176);
         copyToArray(universesOut, result, ArtNetPacket.SHORT_HEADER_LENGTH + 180);
-        result[ArtNetPacket.SHORT_HEADER_LENGTH + 184] = (byte) video;
-        result[ArtNetPacket.SHORT_HEADER_LENGTH + 185] = (byte) macro;
-        result[ArtNetPacket.SHORT_HEADER_LENGTH + 186] = (byte) remote;
+        result[ArtNetPacket.SHORT_HEADER_LENGTH + 184] = video;
+        result[ArtNetPacket.SHORT_HEADER_LENGTH + 185] = macro;
+        result[ArtNetPacket.SHORT_HEADER_LENGTH + 186] = remote;
         copyToArray(spare, result, ArtNetPacket.SHORT_HEADER_LENGTH + 187);
-        result[ArtNetPacket.SHORT_HEADER_LENGTH + 190] = (byte) style;
+        result[ArtNetPacket.SHORT_HEADER_LENGTH + 190] = style;
         copyToArray(macAddress, result, ArtNetPacket.SHORT_HEADER_LENGTH + 191);
         set4BytesHighToLow(bindIP, result, ArtNetPacket.SHORT_HEADER_LENGTH + 197);
-        result[ArtNetPacket.SHORT_HEADER_LENGTH + 201] = (byte) bindIndex;
-        result[ArtNetPacket.SHORT_HEADER_LENGTH + 202] = (byte) status2;
+        result[ArtNetPacket.SHORT_HEADER_LENGTH + 201] = bindIndex;
+        result[ArtNetPacket.SHORT_HEADER_LENGTH + 202] = status2;
         copyToArray(filler, result, ArtNetPacket.SHORT_HEADER_LENGTH + 203);
         return result;
     }
@@ -523,8 +521,8 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
         this.ipAddress = get4BytesHighToLow(data, ArtNetPacket.SHORT_HEADER_LENGTH);
         this.port = get2BytesLowToHigh(data, ArtNetPacket.SHORT_HEADER_LENGTH + 4);
         this.versionInfo = get2BytesHighToLow(data, ArtNetPacket.SHORT_HEADER_LENGTH + 6);
-        this.net = data[ArtNetPacket.SHORT_HEADER_LENGTH + 8] & 0x7f;
-        this.subNet = data[ArtNetPacket.SHORT_HEADER_LENGTH + 9] & 0x0f;
+        this.net = (byte) (data[ArtNetPacket.SHORT_HEADER_LENGTH + 8] & 0x7f);
+        this.subNet = (byte) (data[ArtNetPacket.SHORT_HEADER_LENGTH + 9] & 0x0f);
         this.oem = get2BytesHighToLow(data, ArtNetPacket.SHORT_HEADER_LENGTH + 10);
         this.ubea = data[ArtNetPacket.SHORT_HEADER_LENGTH + 12];
         this.status1 = data[ArtNetPacket.SHORT_HEADER_LENGTH + 13];
@@ -557,7 +555,7 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
             this.status2 = 0;
         }
         if (data.length > (ArtNetPacket.SHORT_HEADER_LENGTH + 203)) {
-            this.filler = Arrays.copyOfRange(data, ArtNetPacket.SHORT_HEADER_LENGTH + 203, data.length);
+            this.filler = copyBytesFromArray(data, ArtNetPacket.SHORT_HEADER_LENGTH + 203);
         } else {
             this.filler = new byte[0];
         }

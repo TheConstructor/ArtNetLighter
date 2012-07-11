@@ -73,7 +73,7 @@ public class ArtPollReplyTest {
 
     @Test
     public void testConstructPacket() throws Exception {
-        final ArtPollReply artPollReply = new ArtPollReply((2 << 24) | (7 << 16) | (90 << 8) | (145), 0x1936, 0x0101, 0, 0, 0x0190, 0, 0x02, 0x0000, "M. Vill Enttec OD", "M. Vill Enttec ODE", "", 1, new byte[]{(byte) 0x80, 0, 0, 0}, new byte[]{0, 0, 0, 0}, new byte[]{(byte) 0x80, 0, 0, 0}, new byte[]{0xc, 0, 0, 0}, new byte[]{0, 0, 0, 0}, 0, 0, 0, 0, new byte[]{0x32, 0x31, (byte) 0x82, (byte) 0x81, 0x01, 0x02}, 0, 0, 0);
+        final ArtPollReply artPollReply = new ArtPollReply((2 << 24) | (7 << 16) | (90 << 8) | (145), 0x1936, 0x0101, (byte) 0, (byte) 0, 0x0190, (byte) 0, (byte) 0x02, 0x0000, "M. Vill Enttec OD", "M. Vill Enttec ODE", "", 1, new byte[]{(byte) 0x80, 0, 0, 0}, new byte[]{0, 0, 0, 0}, new byte[]{(byte) 0x80, 0, 0, 0}, new byte[]{0xc, 0, 0, 0}, new byte[]{0, 0, 0, 0}, (byte) 0, (byte) 0, (byte) 0, (byte) 0, new byte[]{0x32, 0x31, (byte) 0x82, (byte) 0x81, 0x01, 0x02}, 0, (byte) 0, (byte) 0);
         final byte[] actual = artPollReply.constructPacket();
         assertEquals("Length", ArtPollReply.PACKET_LENGTH, actual.length);
         assertArrayEquals(ArtPollReplyTest.cleaned_data1, actual);
