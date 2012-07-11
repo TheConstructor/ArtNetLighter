@@ -21,7 +21,7 @@ import tc.vom.artNetLighter.infrastructure.packets.ArtNetPacket;
 import java.util.Arrays;
 
 /**
- * Some Art-Net helper functions.
+ * Some Art-Net helper functions; mostly to ease binary computation in Java.
  */
 public class ArtNetToolkit {
 
@@ -135,18 +135,26 @@ public class ArtNetToolkit {
     }
 
     public static boolean isBitSet(final int input, final int bit) {
+        assert bit >= 0;
+        assert bit <= 7;
         return (input & (1 << bit)) == 1;
     }
 
     public static int setBit(final int input, final int bit) {
+        assert bit >= 0;
+        assert bit <= 7;
         return (input | (1 << bit));
     }
 
     public static int toggleBit(final int input, final int bit) {
+        assert bit >= 0;
+        assert bit <= 7;
         return (input ^ (1 << bit));
     }
 
     public static int unsetBit(final int input, final int bit) {
+        assert bit >= 0;
+        assert bit <= 7;
         return (input & (~(1 << bit)));
     }
 
