@@ -36,7 +36,7 @@ public abstract class ArtNetPacket implements ArtNetOpCodes {
      * 8 Byte identification
      */
     private static final byte[] ART_NET_ID = {'A', 'r', 't', '-', 'N', 'e', 't', 0};
-    public static final Charset STRING_CHARSET = Charset.forName("ISO-8859-15");
+    public static final Charset STRING_CHARSET = Charset.forName("ASCII");
     public static final int SHORT_NAME_LENGTH = 18;
     public static final int LONG_NAME_LENGTH = 64;
 
@@ -125,6 +125,8 @@ public abstract class ArtNetPacket implements ArtNetOpCodes {
         switch (opCode) {
             case ArtNetOpCodes.OP_CODE_ADDRESS:
                 return new ArtAddress(pData);
+            case ArtNetOpCodes.OP_CODE_DIAGNOSTIC_DATA:
+                return new ArtDiagData(pData);
             case ArtNetOpCodes.OP_CODE_DMX:
                 return new ArtDmx(pData);
             case ArtNetOpCodes.OP_CODE_IP_PROGRAM:
