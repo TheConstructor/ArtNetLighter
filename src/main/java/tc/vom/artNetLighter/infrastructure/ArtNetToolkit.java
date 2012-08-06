@@ -228,7 +228,9 @@ public class ArtNetToolkit {
     }
 
     public static void copyToArray(final byte[] from, final byte[] to, final int offset) {
-        System.arraycopy(from, 0, to, offset, from.length);
+        if (from.length != 0) {
+            System.arraycopy(from, 0, to, offset, from.length);
+        }
     }
 
     public static void copyToArray(final String from, final byte[] to, final int offset, final int maxLength) {
@@ -252,6 +254,9 @@ public class ArtNetToolkit {
     public static byte[] copyBytesFromArray(final byte[] from, final int offset) {
         //return Arrays.copyOfRange(from, offset, offset + length);
         assert offset >= 0;
+        if (offset == from.length) {
+            return new byte[0];
+        }
         return ArtNetToolkit.copyBytesFromArray(from, offset, from.length - offset);
     }
 
