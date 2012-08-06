@@ -37,6 +37,8 @@ public abstract class ArtNetPacket implements ArtNetOpCodes {
      */
     private static final byte[] ART_NET_ID = {'A', 'r', 't', '-', 'N', 'e', 't', 0};
     public static final Charset STRING_CHARSET = Charset.forName("ISO-8859-15");
+    public static final int SHORT_NAME_LENGTH = 18;
+    public static final int LONG_NAME_LENGTH = 64;
 
 
     /**

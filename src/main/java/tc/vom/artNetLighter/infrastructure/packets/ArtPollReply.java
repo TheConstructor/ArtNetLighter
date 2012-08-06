@@ -439,11 +439,11 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
     }
 
     public static byte[] constructPacket(final int ipAddress, final int port, final int versionInfo, final byte net, final byte subNet, final int oem, final byte ubea, final byte status1, final int estaManufacturer, final byte[] shortName, final byte[] longName, final byte[] nodeReport, final int numPorts, final byte[] portTypes, final byte[] goodInput, final byte[] goodOutput, final byte[] universesIn, final byte[] universesOut, final byte video, final byte macro, final byte remote, final byte[] spare, final byte style, final byte[] macAddress, final int bindIP, final byte bindIndex, final byte status2, final byte[] filler) {
-        if ((shortName.length > 17) && ((shortName.length != 18) || (shortName[17] != 0))) {
-            throw new IllegalArgumentException("Short Name has a maximum length of 17 Bytes.");
+        if ((shortName.length >= ArtNetPacket.SHORT_NAME_LENGTH) && ((shortName.length != ArtNetPacket.SHORT_NAME_LENGTH) || (shortName[ArtNetPacket.SHORT_NAME_LENGTH - 1] != 0))) {
+            throw new IllegalArgumentException("Short Name has a maximum length of " + (ArtNetPacket.SHORT_NAME_LENGTH - 1) + " Bytes.");
         }
-        if ((longName.length > 63) && ((longName.length != 64) || (longName[63] != 0))) {
-            throw new IllegalArgumentException("Long Name has a maximum length of 63 Bytes.");
+        if ((longName.length >= ArtNetPacket.LONG_NAME_LENGTH) && ((longName.length != ArtNetPacket.LONG_NAME_LENGTH) || (longName[ArtNetPacket.LONG_NAME_LENGTH - 1] != 0))) {
+            throw new IllegalArgumentException("Long Name has a maximum length of " + (ArtNetPacket.LONG_NAME_LENGTH - 1) + " Bytes.");
         }
         if ((nodeReport.length > 63) && ((nodeReport.length != 64) || (nodeReport[63] != 0))) {
             throw new IllegalArgumentException("Node Report has a maximum length of 63 Bytes.");
