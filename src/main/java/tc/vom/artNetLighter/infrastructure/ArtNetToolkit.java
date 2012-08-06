@@ -227,18 +227,18 @@ public class ArtNetToolkit {
         }
     }
 
-    public static void copyToArray(final byte[] from, final byte[] to, final int offset) {
+    public static void copyBytesToArray(final byte[] from, final byte[] to, final int offset) {
         if (from.length != 0) {
             System.arraycopy(from, 0, to, offset, from.length);
         }
     }
 
-    public static void copyToArray(final String from, final byte[] to, final int offset, final int maxLength) {
+    public static void copyStringToArray(final String from, final byte[] to, final int offset, final int maxLength) {
         final byte[] strBytes = from.getBytes(ArtNetPacket.STRING_CHARSET);
         if (strBytes.length > maxLength) {
             throw new IllegalArgumentException("String too long");
         }
-        ArtNetToolkit.copyToArray(strBytes, to, offset);
+        ArtNetToolkit.copyBytesToArray(strBytes, to, offset);
         Arrays.fill(to, offset + strBytes.length, offset + maxLength, (byte) 0);
     }
 

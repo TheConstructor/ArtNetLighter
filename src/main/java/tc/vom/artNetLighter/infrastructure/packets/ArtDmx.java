@@ -102,7 +102,7 @@ public class ArtDmx extends ArtNetPacket {
         result[ArtNetPacket.FULL_HEADER_LENGTH + 1] = physical;
         ArtNetToolkit.set2BytesLowToHigh(portAddress, result, ArtNetPacket.FULL_HEADER_LENGTH + 2);
         ArtNetToolkit.set2BytesHighToLow(data.length, result, ArtNetPacket.FULL_HEADER_LENGTH + 4);
-        ArtNetToolkit.copyToArray(data, result, ArtNetPacket.FULL_HEADER_LENGTH + 6);
+        ArtNetToolkit.copyBytesToArray(data, result, ArtNetPacket.FULL_HEADER_LENGTH + 6);
         return result;
     }
 

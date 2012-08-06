@@ -487,25 +487,25 @@ public class ArtPollReply extends ArtNetPacket implements ArtNetStyleCodes, ArtN
         result[ArtNetPacket.SHORT_HEADER_LENGTH + 12] = ubea;
         result[ArtNetPacket.SHORT_HEADER_LENGTH + 13] = status1;
         set2BytesLowToHigh(estaManufacturer, result, ArtNetPacket.SHORT_HEADER_LENGTH + 14);
-        copyToArray(shortName, result, ArtNetPacket.SHORT_HEADER_LENGTH + 16);
-        copyToArray(longName, result, ArtNetPacket.SHORT_HEADER_LENGTH + 34);
-        copyToArray(nodeReport, result, ArtNetPacket.SHORT_HEADER_LENGTH + 98);
+        copyBytesToArray(shortName, result, ArtNetPacket.SHORT_HEADER_LENGTH + 16);
+        copyBytesToArray(longName, result, ArtNetPacket.SHORT_HEADER_LENGTH + 34);
+        copyBytesToArray(nodeReport, result, ArtNetPacket.SHORT_HEADER_LENGTH + 98);
         set2BytesHighToLow(numPorts, result, ArtNetPacket.SHORT_HEADER_LENGTH + 162);
-        copyToArray(portTypes, result, ArtNetPacket.SHORT_HEADER_LENGTH + 164);
-        copyToArray(goodInput, result, ArtNetPacket.SHORT_HEADER_LENGTH + 168);
-        copyToArray(goodOutput, result, ArtNetPacket.SHORT_HEADER_LENGTH + 172);
-        copyToArray(universesIn, result, ArtNetPacket.SHORT_HEADER_LENGTH + 176);
-        copyToArray(universesOut, result, ArtNetPacket.SHORT_HEADER_LENGTH + 180);
+        copyBytesToArray(portTypes, result, ArtNetPacket.SHORT_HEADER_LENGTH + 164);
+        copyBytesToArray(goodInput, result, ArtNetPacket.SHORT_HEADER_LENGTH + 168);
+        copyBytesToArray(goodOutput, result, ArtNetPacket.SHORT_HEADER_LENGTH + 172);
+        copyBytesToArray(universesIn, result, ArtNetPacket.SHORT_HEADER_LENGTH + 176);
+        copyBytesToArray(universesOut, result, ArtNetPacket.SHORT_HEADER_LENGTH + 180);
         result[ArtNetPacket.SHORT_HEADER_LENGTH + 184] = video;
         result[ArtNetPacket.SHORT_HEADER_LENGTH + 185] = macro;
         result[ArtNetPacket.SHORT_HEADER_LENGTH + 186] = remote;
-        copyToArray(spare, result, ArtNetPacket.SHORT_HEADER_LENGTH + 187);
+        copyBytesToArray(spare, result, ArtNetPacket.SHORT_HEADER_LENGTH + 187);
         result[ArtNetPacket.SHORT_HEADER_LENGTH + 190] = style;
-        copyToArray(macAddress, result, ArtNetPacket.SHORT_HEADER_LENGTH + 191);
+        copyBytesToArray(macAddress, result, ArtNetPacket.SHORT_HEADER_LENGTH + 191);
         set4BytesHighToLow(bindIP, result, ArtNetPacket.SHORT_HEADER_LENGTH + 197);
         result[ArtNetPacket.SHORT_HEADER_LENGTH + 201] = bindIndex;
         result[ArtNetPacket.SHORT_HEADER_LENGTH + 202] = status2;
-        copyToArray(filler, result, ArtNetPacket.SHORT_HEADER_LENGTH + 203);
+        copyBytesToArray(filler, result, ArtNetPacket.SHORT_HEADER_LENGTH + 203);
         return result;
     }
 

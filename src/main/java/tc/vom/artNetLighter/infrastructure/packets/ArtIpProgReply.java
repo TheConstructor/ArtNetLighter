@@ -108,12 +108,12 @@ public class ArtIpProgReply extends ArtNetPacket {
 
     public static byte[] constructPaket(final byte[] filler, final int progIp, final int progSm, final int progPort, final byte status, final byte[] spare) {
         final byte[] pData = ArtNetPacket.constructPacket(ArtIpProgReply.MINIMUM_PACKET_LENGTH + spare.length, ArtNetOpCodes.OP_CODE_IP_PROGRAM_REPLY);
-        copyToArray(filler, pData, ArtNetPacket.FULL_HEADER_LENGTH);
+        copyBytesToArray(filler, pData, ArtNetPacket.FULL_HEADER_LENGTH);
         set4BytesHighToLow(progIp, pData, ArtNetPacket.FULL_HEADER_LENGTH + 4);
         set4BytesHighToLow(progSm, pData, ArtNetPacket.FULL_HEADER_LENGTH + 8);
         set2BytesHighToLow(progPort, pData, ArtNetPacket.FULL_HEADER_LENGTH + 16);
         pData[ArtNetPacket.FULL_HEADER_LENGTH + 18] = status;
-        copyToArray(spare, pData, ArtNetPacket.FULL_HEADER_LENGTH + 19);
+        copyBytesToArray(spare, pData, ArtNetPacket.FULL_HEADER_LENGTH + 19);
         return pData;
     }
 

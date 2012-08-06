@@ -130,7 +130,7 @@ public class ArtIpProg extends ArtNetPacket {
         set4BytesHighToLow(progIp, pData, ArtNetPacket.FULL_HEADER_LENGTH + 4);
         set4BytesHighToLow(progSm, pData, ArtNetPacket.FULL_HEADER_LENGTH + 8);
         set2BytesHighToLow(progPort, pData, ArtNetPacket.FULL_HEADER_LENGTH + 12);
-        copyToArray(spare, pData, ArtNetPacket.FULL_HEADER_LENGTH + 14);
+        copyBytesToArray(spare, pData, ArtNetPacket.FULL_HEADER_LENGTH + 14);
         return pData;
     }
 
