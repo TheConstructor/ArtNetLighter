@@ -123,14 +123,18 @@ public abstract class ArtNetPacket implements ArtNetOpCodes {
     public static ArtNetPacket parsePacket(final byte[] pData) {
         final int opCode = get2BytesLowToHigh(pData, 8);
         switch (opCode) {
+            case ArtNetOpCodes.OP_CODE_ADDRESS:
+                return new ArtAddress(pData);
+            case ArtNetOpCodes.OP_CODE_DMX:
+                return new ArtDmx(pData);
+            case ArtNetOpCodes.OP_CODE_IP_PROGRAM:
+                return new ArtIpProg(pData);
+            case ArtNetOpCodes.OP_CODE_IP_PROGRAM_REPLY:
+                return new ArtIpProgReply(pData);
             case ArtNetOpCodes.OP_CODE_POLL:
                 return new ArtPoll(pData);
             case ArtNetOpCodes.OP_CODE_POLL_REPLY:
                 return new ArtPollReply(pData);
-            case ArtNetOpCodes.OP_CODE_IP_PROGRAM:
-                return new ArtIpProg(pData);
-            case ArtNetOpCodes.OP_CODE_DMX:
-                return new ArtDmx(pData);
             default:
                 throw new IllegalArgumentException("The packet contains an unhandled OpCode");
         }
