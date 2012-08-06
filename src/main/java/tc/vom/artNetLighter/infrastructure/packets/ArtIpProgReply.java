@@ -103,7 +103,7 @@ public class ArtIpProgReply extends ArtNetPacket {
 
     @Override
     public byte[] constructPacket() {
-        return new byte[0];  //To change body of implemented methods use File | Settings | File Templates.
+        return ArtIpProgReply.constructPaket(this.filler, this.progIp, this.progSm, this.progPort, this.status, this.spare);
     }
 
     public static byte[] constructPaket(final byte[] filler, final int progIp, final int progSm, final int progPort, final byte status, final byte[] spare) {
