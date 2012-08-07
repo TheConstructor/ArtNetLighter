@@ -101,6 +101,8 @@ public abstract class _ArtNetPacket implements ArtNetOpCodes {
                 return new ArtPoll(pData);
             case ArtNetOpCodes.OP_CODE_POLL_REPLY:
                 return new ArtPollReply(pData);
+            case ArtNetOpCodes.OP_CODE_TIME_CODE:
+                return new ArtTimeCode(pData);
             default:
                 throw new IllegalArgumentException("The packet contains an unhandled OpCode");
         }
