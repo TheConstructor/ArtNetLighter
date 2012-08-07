@@ -30,7 +30,7 @@ public class ArtDiagData extends ArtNetPacket {
     public static final int MAX_DATA_LENGTH = 512;
     public static final int MINIMUM_PACKET_LENGTH = ArtNetPacket.FULL_HEADER_LENGTH + 6;
 
-    public static final class PriorityConstants {
+    public static interface PriorityConstants {
         /**
          * Low priority message
          */
@@ -51,10 +51,6 @@ public class ArtDiagData extends ArtNetPacket {
          * Volatile message. Messages of this type are displayed on a single line in the DMX-Workshop diagnostics display. All other types are displayed in a list box.
          */
         public static final byte DpVolatile = (byte) 0xff;
-
-        private PriorityConstants() {
-
-        }
     }
 
     /**

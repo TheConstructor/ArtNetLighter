@@ -30,7 +30,7 @@ public class ArtAddress extends ArtNetPacket {
     public static final byte FILLER = 0;
     public static final int PACKET_LENGTH = ArtNetPacket.FULL_HEADER_LENGTH + 95;
 
-    public static final class CommandConstants {
+    public static interface CommandConstants {
 
         /**
          * No Action
@@ -107,10 +107,6 @@ public class ArtAddress extends ArtNetPacket {
          * Clear all data buffers associated with output port 3
          */
         public final byte AcClearOp3 = (byte) 0x93;
-
-        private CommandConstants() {
-            super();
-        }
     }
 
     /**
