@@ -25,17 +25,17 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Test Class for {@link ArtNetPacket}
+ * Test Class for {@link _ArtNetPacket}
  */
 public class ArtNetPacketTest {
-    private ArtNetPacket artNetPacket = null;
+    private _ArtNetPacket artNetPacket = null;
 
     @Before
     public void setUp() throws Exception {
-        this.artNetPacket = new ArtNetPacket(ArtNetOpCodes.OP_CODE_POLL) {
+        this.artNetPacket = new _ArtNetPacket(ArtNetOpCodes.OP_CODE_POLL) {
             @Override
             public byte[] constructPacket() {
-                return ArtNetPacket.constructUnversionedPacket(ArtNetPacket.SHORT_HEADER_LENGTH, ArtNetOpCodes.OP_CODE_POLL);
+                return _ArtNetPacket.constructUnversionedPacket(_ArtNetPacket.SHORT_HEADER_LENGTH, ArtNetOpCodes.OP_CODE_POLL);
             }
         };
     }
@@ -52,11 +52,11 @@ public class ArtNetPacketTest {
 
     @Test
     public void testConstructPacket1() throws Exception {
-        assertArrayEquals("constructUnversionedPacket should do the same as the static call", this.artNetPacket.constructPacket(), ArtNetPacket.constructUnversionedPacket(ArtNetPacket.SHORT_HEADER_LENGTH, ArtNetOpCodes.OP_CODE_POLL));
+        assertArrayEquals("constructUnversionedPacket should do the same as the static call", this.artNetPacket.constructPacket(), _ArtNetPacket.constructUnversionedPacket(_ArtNetPacket.SHORT_HEADER_LENGTH, ArtNetOpCodes.OP_CODE_POLL));
     }
 
     @Test
     public void testConstructPacket2() throws Exception {
-        assertArrayEquals("constructUnversionedPacket(HEADER_LENGTH, OP_POLL) should generate a valid OP_POLL header", new byte[]{'A', 'r', 't', '-', 'N', 'e', 't', 0, ArtNetOpCodes.OP_CODE_POLL & 0xff, (ArtNetOpCodes.OP_CODE_POLL >> 8) & 0xff}, ArtNetPacket.constructUnversionedPacket(ArtNetPacket.SHORT_HEADER_LENGTH, ArtNetOpCodes.OP_CODE_POLL));
+        assertArrayEquals("constructUnversionedPacket(HEADER_LENGTH, OP_POLL) should generate a valid OP_POLL header", new byte[]{'A', 'r', 't', '-', 'N', 'e', 't', 0, ArtNetOpCodes.OP_CODE_POLL & 0xff, (ArtNetOpCodes.OP_CODE_POLL >> 8) & 0xff}, _ArtNetPacket.constructUnversionedPacket(_ArtNetPacket.SHORT_HEADER_LENGTH, ArtNetOpCodes.OP_CODE_POLL));
     }
 }

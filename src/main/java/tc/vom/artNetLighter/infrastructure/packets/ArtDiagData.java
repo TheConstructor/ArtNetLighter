@@ -25,10 +25,10 @@ import static tc.vom.artNetLighter.infrastructure.ArtNetToolkit.*;
 /**
  * Implements ArtDiagData packet.
  */
-public class ArtDiagData extends ArtNetPacket {
+public class ArtDiagData extends _ArtNetPacket {
 
     public static final int MAX_DATA_LENGTH = 512;
-    public static final int MINIMUM_PACKET_LENGTH = ArtNetPacket.FULL_HEADER_LENGTH + 6;
+    public static final int MINIMUM_PACKET_LENGTH = _ArtNetPacket.FULL_HEADER_LENGTH + 6;
 
     public static interface PriorityConstants {
         /**
@@ -86,7 +86,7 @@ public class ArtDiagData extends ArtNetPacket {
     private final byte[] data;
 
     public ArtDiagData(final byte priority, final String data) {
-        this(priority, data.getBytes(ArtNetPacket.STRING_CHARSET));
+        this(priority, data.getBytes(_ArtNetPacket.STRING_CHARSET));
     }
 
     public ArtDiagData(final byte priority, final byte[] data) {
@@ -148,7 +148,7 @@ public class ArtDiagData extends ArtNetPacket {
         if (data == null) {
             data = "";
         }
-        final byte[] dataBytes = data.getBytes(ArtNetPacket.STRING_CHARSET);
+        final byte[] dataBytes = data.getBytes(_ArtNetPacket.STRING_CHARSET);
         return ArtDiagData.constructPacket(filler1, priority, filler2, filler3, dataBytes);
     }
 
@@ -161,13 +161,13 @@ public class ArtDiagData extends ArtNetPacket {
             copyBytesToArray(data, t_data, 0);
             data = t_data;
         }
-        final byte[] pData = ArtNetPacket.constructPacket(ArtDiagData.MINIMUM_PACKET_LENGTH + data.length, ArtNetOpCodes.OP_CODE_DIAGNOSTIC_DATA);
-        pData[ArtNetPacket.FULL_HEADER_LENGTH] = filler1;
-        pData[ArtNetPacket.FULL_HEADER_LENGTH + 1] = priority;
-        pData[ArtNetPacket.FULL_HEADER_LENGTH + 2] = filler2;
-        pData[ArtNetPacket.FULL_HEADER_LENGTH + 3] = filler3;
-        set2BytesHighToLow(data.length, pData, ArtNetPacket.FULL_HEADER_LENGTH + 4);
-        copyBytesToArray(data, pData, ArtNetPacket.FULL_HEADER_LENGTH + 6);
+        final byte[] pData = _ArtNetPacket.constructPacket(ArtDiagData.MINIMUM_PACKET_LENGTH + data.length, ArtNetOpCodes.OP_CODE_DIAGNOSTIC_DATA);
+        pData[_ArtNetPacket.FULL_HEADER_LENGTH] = filler1;
+        pData[_ArtNetPacket.FULL_HEADER_LENGTH + 1] = priority;
+        pData[_ArtNetPacket.FULL_HEADER_LENGTH + 2] = filler2;
+        pData[_ArtNetPacket.FULL_HEADER_LENGTH + 3] = filler3;
+        set2BytesHighToLow(data.length, pData, _ArtNetPacket.FULL_HEADER_LENGTH + 4);
+        copyBytesToArray(data, pData, _ArtNetPacket.FULL_HEADER_LENGTH + 6);
         return pData;
     }
 
@@ -179,12 +179,12 @@ public class ArtDiagData extends ArtNetPacket {
         if (pData.length < ArtDiagData.MINIMUM_PACKET_LENGTH) {
             throw new IllegalArgumentException("Packet needs to be at least " + ArtDiagData.MINIMUM_PACKET_LENGTH + " bytes");
         }
-        this.filler1 = pData[ArtNetPacket.FULL_HEADER_LENGTH];
-        this.priority = pData[ArtNetPacket.FULL_HEADER_LENGTH + 1];
-        this.filler2 = pData[ArtNetPacket.FULL_HEADER_LENGTH + 2];
-        this.filler3 = pData[ArtNetPacket.FULL_HEADER_LENGTH + 3];
-        this.length = get2BytesHighToLow(pData, ArtNetPacket.FULL_HEADER_LENGTH + 4);
-        this.data = copyBytesFromArray(pData, ArtNetPacket.FULL_HEADER_LENGTH + 6, this.length);
+        this.filler1 = pData[_ArtNetPacket.FULL_HEADER_LENGTH];
+        this.priority = pData[_ArtNetPacket.FULL_HEADER_LENGTH + 1];
+        this.filler2 = pData[_ArtNetPacket.FULL_HEADER_LENGTH + 2];
+        this.filler3 = pData[_ArtNetPacket.FULL_HEADER_LENGTH + 3];
+        this.length = get2BytesHighToLow(pData, _ArtNetPacket.FULL_HEADER_LENGTH + 4);
+        this.data = copyBytesFromArray(pData, _ArtNetPacket.FULL_HEADER_LENGTH + 6, this.length);
     }
 
     @Override

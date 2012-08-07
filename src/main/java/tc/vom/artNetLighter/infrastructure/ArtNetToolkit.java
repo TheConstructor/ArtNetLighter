@@ -16,7 +16,7 @@
 
 package tc.vom.artNetLighter.infrastructure;
 
-import tc.vom.artNetLighter.infrastructure.packets.ArtNetPacket;
+import tc.vom.artNetLighter.infrastructure.packets._ArtNetPacket;
 
 import java.util.Arrays;
 
@@ -234,7 +234,7 @@ public class ArtNetToolkit {
     }
 
     public static void copyStringToArray(final String from, final byte[] to, final int offset, final int maxLength) {
-        final byte[] strBytes = from.getBytes(ArtNetPacket.STRING_CHARSET);
+        final byte[] strBytes = from.getBytes(_ArtNetPacket.STRING_CHARSET);
         if (strBytes.length > maxLength) {
             throw new IllegalArgumentException("String too long");
         }
@@ -261,7 +261,7 @@ public class ArtNetToolkit {
     }
 
     public static String copyStringFromArray(final byte[] from, final int offset, final int length) {
-        final String shortName = new String(from, offset, length, ArtNetPacket.STRING_CHARSET);
+        final String shortName = new String(from, offset, length, _ArtNetPacket.STRING_CHARSET);
         final int nullTerminator = shortName.indexOf(0);
         if (nullTerminator != -1) {
             return shortName.substring(0, nullTerminator);

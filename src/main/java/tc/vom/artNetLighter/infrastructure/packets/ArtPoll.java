@@ -21,13 +21,13 @@ import tc.vom.artNetLighter.infrastructure.constants.ArtNetOpCodes;
 /**
  * Used to hold the data of an ArtPoll-Packet.
  */
-public class ArtPoll extends ArtNetPacket {
+public class ArtPoll extends _ArtNetPacket {
 
     public static final int TALK_TO_ME_UPDATE_ON_ANY_CHANGE = 0x1;
     public static final int TALK_TO_ME_SEND_DIAGNOSTICS_MESSAGES = 0x2;
     public static final int TALK_TO_ME_USE_UNICAST = 0x4;
 
-    public static final int PACKET_LENGTH = ArtNetPacket.FULL_HEADER_LENGTH + 2;
+    public static final int PACKET_LENGTH = _ArtNetPacket.FULL_HEADER_LENGTH + 2;
     /**
      * 1 Byte TalkToMe
      */
@@ -38,9 +38,6 @@ public class ArtPoll extends ArtNetPacket {
      */
     private final byte priority;
 
-    /**
-     * @param talkToMe
-     */
     public ArtPoll(final byte talkToMe, final byte priority) {
         super(ArtNetOpCodes.OP_CODE_POLL);
         this.talkToMe = talkToMe;
@@ -61,9 +58,9 @@ public class ArtPoll extends ArtNetPacket {
     }
 
     public static byte[] constructPacket(final byte talkToMe, final byte priority) {
-        final byte[] result = ArtNetPacket.constructPacket(ArtPoll.PACKET_LENGTH, ArtNetOpCodes.OP_CODE_POLL);
-        result[ArtNetPacket.FULL_HEADER_LENGTH] = talkToMe;
-        result[ArtNetPacket.FULL_HEADER_LENGTH + 1] = priority;
+        final byte[] result = _ArtNetPacket.constructPacket(ArtPoll.PACKET_LENGTH, ArtNetOpCodes.OP_CODE_POLL);
+        result[_ArtNetPacket.FULL_HEADER_LENGTH] = talkToMe;
+        result[_ArtNetPacket.FULL_HEADER_LENGTH + 1] = priority;
         return result;
     }
 
@@ -75,8 +72,8 @@ public class ArtPoll extends ArtNetPacket {
         if (this.getOpCode() != ArtNetOpCodes.OP_CODE_POLL) {
             throw new IllegalArgumentException("Provided data specifies a wrong OpCode");
         }
-        this.talkToMe = data[ArtNetPacket.FULL_HEADER_LENGTH];
-        this.priority = data[ArtNetPacket.FULL_HEADER_LENGTH + 1];
+        this.talkToMe = data[_ArtNetPacket.FULL_HEADER_LENGTH];
+        this.priority = data[_ArtNetPacket.FULL_HEADER_LENGTH + 1];
     }
 
     @Override

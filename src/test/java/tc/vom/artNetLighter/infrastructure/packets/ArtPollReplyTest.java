@@ -68,7 +68,7 @@ public class ArtPollReplyTest {
         assertEquals("Status2", 0, artPollReply.getStatus2());
         assertArrayEquals("Filler", new byte[0], artPollReply.getFiller());
 
-        assertEquals("parsePacket", artPollReply, ArtNetPacket.parsePacket(ArtPollReplyTest.captured_data1));
+        assertEquals("parsePacket", artPollReply, _ArtNetPacket.parsePacket(ArtPollReplyTest.captured_data1));
     }
 
     @Test
