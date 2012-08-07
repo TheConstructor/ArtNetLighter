@@ -24,12 +24,12 @@ import static tc.vom.artNetLighter.infrastructure.ArtNetToolkit.*;
 /**
  * Implements ArtIpProg packet.
  */
-public class ArtIpProg extends _ArtNetPacket {
+public class ArtIpProg extends _VersionedArtNetPacket {
 
     public static final byte[] SPARE_BYTES = new byte[8];
     public static final int FILLER1 = 0;
     public static final int FILLER2 = 0;
-    public static final int MINIMUM_PACKET_LENGTH = _ArtNetPacket.FULL_HEADER_LENGTH + 14;
+    public static final int MINIMUM_PACKET_LENGTH = _VersionedArtNetPacket.FULL_HEADER_LENGTH + 14;
     /**
      * 2 Bytes Filler.
      * Pad length to match ArtPoll
@@ -123,14 +123,14 @@ public class ArtIpProg extends _ArtNetPacket {
     }
 
     public static byte[] constructPacket(final int filler1, final byte command, final byte filler2, final int progIp, final int progSm, final int progPort, final byte[] spare) {
-        final byte[] pData = _ArtNetPacket.constructPacket(ArtIpProg.MINIMUM_PACKET_LENGTH + spare.length, ArtNetOpCodes.OP_CODE_IP_PROGRAM);
-        set2BytesHighToLow(filler1, pData, _ArtNetPacket.FULL_HEADER_LENGTH);
-        pData[_ArtNetPacket.FULL_HEADER_LENGTH + 2] = command;
-        pData[_ArtNetPacket.FULL_HEADER_LENGTH + 3] = filler2;
-        set4BytesHighToLow(progIp, pData, _ArtNetPacket.FULL_HEADER_LENGTH + 4);
-        set4BytesHighToLow(progSm, pData, _ArtNetPacket.FULL_HEADER_LENGTH + 8);
-        set2BytesHighToLow(progPort, pData, _ArtNetPacket.FULL_HEADER_LENGTH + 12);
-        copyBytesToArray(spare, pData, _ArtNetPacket.FULL_HEADER_LENGTH + 14);
+        final byte[] pData = _VersionedArtNetPacket.constructPacket(ArtIpProg.MINIMUM_PACKET_LENGTH + spare.length, ArtNetOpCodes.OP_CODE_IP_PROGRAM);
+        set2BytesHighToLow(filler1, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH);
+        pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 2] = command;
+        pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 3] = filler2;
+        set4BytesHighToLow(progIp, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 4);
+        set4BytesHighToLow(progSm, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 8);
+        set2BytesHighToLow(progPort, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 12);
+        copyBytesToArray(spare, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 14);
         return pData;
     }
 
@@ -142,14 +142,14 @@ public class ArtIpProg extends _ArtNetPacket {
         if (pData.length < ArtIpProg.MINIMUM_PACKET_LENGTH) {
             throw new IllegalArgumentException("Packet needs to be at least " + ArtIpProg.MINIMUM_PACKET_LENGTH + " bytes");
         }
-        this.filler1 = get2BytesHighToLow(pData, _ArtNetPacket.FULL_HEADER_LENGTH);
-        this.command = pData[_ArtNetPacket.FULL_HEADER_LENGTH + 2];
-        this.filler2 = pData[_ArtNetPacket.FULL_HEADER_LENGTH + 3];
-        this.progIp = get4BytesHighToLow(pData, _ArtNetPacket.FULL_HEADER_LENGTH + 4);
-        this.progSm = get4BytesHighToLow(pData, _ArtNetPacket.FULL_HEADER_LENGTH + 8);
-        this.progPort = get2BytesHighToLow(pData, _ArtNetPacket.FULL_HEADER_LENGTH + 12);
-        if (pData.length > (_ArtNetPacket.FULL_HEADER_LENGTH + 14)) {
-            this.spare = ArtNetToolkit.copyBytesFromArray(pData, _ArtNetPacket.FULL_HEADER_LENGTH + 14);
+        this.filler1 = get2BytesHighToLow(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH);
+        this.command = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 2];
+        this.filler2 = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 3];
+        this.progIp = get4BytesHighToLow(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 4);
+        this.progSm = get4BytesHighToLow(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 8);
+        this.progPort = get2BytesHighToLow(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 12);
+        if (pData.length > (_VersionedArtNetPacket.FULL_HEADER_LENGTH + 14)) {
+            this.spare = ArtNetToolkit.copyBytesFromArray(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 14);
         } else {
             this.spare = ArtIpProg.SPARE_BYTES;
         }

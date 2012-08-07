@@ -25,8 +25,8 @@ import java.util.Arrays;
 /**
  * Used to hold the data of an ArtDmx-Packet. Approximately every 4 Seconds all DMX-Values should be retransmitted.
  */
-public class ArtDmx extends _ArtNetPacket {
-    public static final int MINIMUM_PACKET_SIZE = _ArtNetPacket.FULL_HEADER_LENGTH + 6;
+public class ArtDmx extends _VersionedArtNetPacket {
+    public static final int MINIMUM_PACKET_SIZE = _VersionedArtNetPacket.FULL_HEADER_LENGTH + 6;
     /**
      * 1 Byte Sequence.
      * The sequence number is used to ensure that ArtDmx packets are used in the correct order. When Art-Net is carried over a medium such as the Internet, it is possible that ArtDmx packets will reach the receiver out of order.
@@ -97,12 +97,12 @@ public class ArtDmx extends _ArtNetPacket {
     }
 
     public static byte[] constructPacket(final byte sequence, final byte physical, final int portAddress, final byte[] data) {
-        final byte[] result = _ArtNetPacket.constructPacket(ArtDmx.MINIMUM_PACKET_SIZE + data.length, ArtNetOpCodes.OP_CODE_DMX);
-        result[_ArtNetPacket.FULL_HEADER_LENGTH] = sequence;
-        result[_ArtNetPacket.FULL_HEADER_LENGTH + 1] = physical;
-        ArtNetToolkit.set2BytesLowToHigh(portAddress, result, _ArtNetPacket.FULL_HEADER_LENGTH + 2);
-        ArtNetToolkit.set2BytesHighToLow(data.length, result, _ArtNetPacket.FULL_HEADER_LENGTH + 4);
-        ArtNetToolkit.copyBytesToArray(data, result, _ArtNetPacket.FULL_HEADER_LENGTH + 6);
+        final byte[] result = _VersionedArtNetPacket.constructPacket(ArtDmx.MINIMUM_PACKET_SIZE + data.length, ArtNetOpCodes.OP_CODE_DMX);
+        result[_VersionedArtNetPacket.FULL_HEADER_LENGTH] = sequence;
+        result[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 1] = physical;
+        ArtNetToolkit.set2BytesLowToHigh(portAddress, result, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 2);
+        ArtNetToolkit.set2BytesHighToLow(data.length, result, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 4);
+        ArtNetToolkit.copyBytesToArray(data, result, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 6);
         return result;
     }
 
@@ -114,11 +114,11 @@ public class ArtDmx extends _ArtNetPacket {
         if (this.getOpCode() != ArtNetOpCodes.OP_CODE_DMX) {
             throw new IllegalArgumentException("Provided data specifies a wrong OpCode");
         }
-        this.sequence = pData[_ArtNetPacket.FULL_HEADER_LENGTH];
-        this.physical = pData[_ArtNetPacket.FULL_HEADER_LENGTH + 1];
-        this.portAddress = ArtNetToolkit.get2BytesLowToHigh(pData, _ArtNetPacket.FULL_HEADER_LENGTH + 2);
-        this.length = ArtNetToolkit.get2BytesHighToLow(pData, _ArtNetPacket.FULL_HEADER_LENGTH + 4);
-        this.data = ArtNetToolkit.copyBytesFromArray(pData, _ArtNetPacket.FULL_HEADER_LENGTH + 6, this.length);
+        this.sequence = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH];
+        this.physical = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 1];
+        this.portAddress = ArtNetToolkit.get2BytesLowToHigh(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 2);
+        this.length = ArtNetToolkit.get2BytesHighToLow(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 4);
+        this.data = ArtNetToolkit.copyBytesFromArray(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 6, this.length);
     }
 
     @Override

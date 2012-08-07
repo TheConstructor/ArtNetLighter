@@ -21,21 +21,18 @@ import tc.vom.artNetLighter.infrastructure.constants.ArtNetOpCodes;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
-import static tc.vom.artNetLighter.infrastructure.ArtNetToolkit.*;
+import static tc.vom.artNetLighter.infrastructure.ArtNetToolkit.get2BytesLowToHigh;
+import static tc.vom.artNetLighter.infrastructure.ArtNetToolkit.set2BytesLowToHigh;
 
 /**
  * Represents an Art-Net packet that could be send or received.
  */
 public abstract class _ArtNetPacket implements ArtNetOpCodes {
-
-    public static final int PROTOCOL_VERSION = 14;
     public static final int SHORT_HEADER_LENGTH = 10;
-    public static final int FULL_HEADER_LENGTH = 12;
-
     /**
      * 8 Byte identification
      */
-    private static final byte[] ART_NET_ID = {'A', 'r', 't', '-', 'N', 'e', 't', 0};
+    public static final byte[] ART_NET_ID = {'A', 'r', 't', '-', 'N', 'e', 't', 0};
     public static final Charset STRING_CHARSET = Charset.forName("ASCII");
     public static final int SHORT_NAME_LENGTH = 18;
     public static final int LONG_NAME_LENGTH = 64;
@@ -46,21 +43,11 @@ public abstract class _ArtNetPacket implements ArtNetOpCodes {
      */
     private final int opCode;
 
-    /**
-     * 2 Byte Protocol Version
-     */
-    private final int protocolVersion;
-
     public _ArtNetPacket(final int opCode) {
-        this(opCode, _ArtNetPacket.PROTOCOL_VERSION);
-    }
-
-    public _ArtNetPacket(final int opCode, final int protocolVersion) {
         this.opCode = opCode;
-        this.protocolVersion = protocolVersion;
     }
 
-    @SuppressWarnings("WeakerAccess")
+
     public _ArtNetPacket(final byte[] data) {
         if (data.length < _ArtNetPacket.SHORT_HEADER_LENGTH) {
             throw new IllegalArgumentException("Minimum size for Packet Header is " + _ArtNetPacket.SHORT_HEADER_LENGTH);
@@ -68,17 +55,9 @@ public abstract class _ArtNetPacket implements ArtNetOpCodes {
         final byte[] header = new byte[_ArtNetPacket.ART_NET_ID.length];
         System.arraycopy(data, 0, header, 0, header.length);
         if (!Arrays.equals(_ArtNetPacket.ART_NET_ID, header)) {
-            throw new IllegalArgumentException("Packet data must start with _ArtNetPacket.ART_NET_ID");
+            throw new IllegalArgumentException("Packet data must start with _ArtNetPacket.ART_NET_ID: " + Arrays.toString(_ArtNetPacket.ART_NET_ID));
         }
         this.opCode = get2BytesLowToHigh(data, 8);
-        if (this.opCode != ArtNetOpCodes.OP_CODE_POLL_REPLY) {
-            if (data.length < _ArtNetPacket.FULL_HEADER_LENGTH) {
-                throw new IllegalArgumentException("Minimum size for Non-ArtPollReply-Packet Header is " + _ArtNetPacket.FULL_HEADER_LENGTH);
-            }
-            this.protocolVersion = get2BytesHighToLow(data, 10);
-        } else {
-            this.protocolVersion = _ArtNetPacket.PROTOCOL_VERSION;
-        }
     }
 
     /**
@@ -89,12 +68,10 @@ public abstract class _ArtNetPacket implements ArtNetOpCodes {
     }
 
     /**
-     * 2 Byte Protocol Version
+     * Encode all stored information into an byte[]-array suitable for usage as data of an UPD-datagram.
+     *
+     * @return UPD-datagram data
      */
-    public int getProtocolVersion() {
-        return this.protocolVersion;
-    }
-
     public abstract byte[] constructPacket();
 
     public static byte[] constructUnversionedPacket(final int packetLength, final int opCode) {
@@ -104,19 +81,6 @@ public abstract class _ArtNetPacket implements ArtNetOpCodes {
         final byte[] result = new byte[packetLength];
         System.arraycopy(_ArtNetPacket.ART_NET_ID, 0, result, 0, _ArtNetPacket.ART_NET_ID.length);
         set2BytesLowToHigh(opCode, result, 8);
-        return result;
-    }
-
-    public static byte[] constructPacket(final int packetLength, final int opCode) {
-        return _ArtNetPacket.constructPacket(packetLength, opCode, _ArtNetPacket.PROTOCOL_VERSION);
-    }
-
-    public static byte[] constructPacket(final int packetLength, final int opCode, final int protocolVersion) {
-        if (packetLength < _ArtNetPacket.FULL_HEADER_LENGTH) {
-            throw new IllegalArgumentException("Header alone needs 10 Bytes");
-        }
-        final byte[] result = _ArtNetPacket.constructUnversionedPacket(packetLength, opCode);
-        set2BytesHighToLow(protocolVersion, result, 10);
         return result;
     }
 
@@ -153,11 +117,8 @@ public abstract class _ArtNetPacket implements ArtNetOpCodes {
 
         final _ArtNetPacket that = (_ArtNetPacket) o;
 
-        if (this.opCode != that.opCode) {
-            return false;
-        }
         //noinspection RedundantIfStatement
-        if (this.protocolVersion != that.protocolVersion) {
+        if (this.opCode != that.opCode) {
             return false;
         }
 
@@ -166,8 +127,6 @@ public abstract class _ArtNetPacket implements ArtNetOpCodes {
 
     @Override
     public int hashCode() {
-        int result = this.opCode;
-        result = (31 * result) + this.protocolVersion;
-        return result;
+        return this.opCode;
     }
 }

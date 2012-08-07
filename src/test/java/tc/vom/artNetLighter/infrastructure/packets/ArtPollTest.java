@@ -33,7 +33,7 @@ public class ArtPollTest {
     public void testConstructorBytes() {
         final ArtPoll artPoll = new ArtPoll(ArtPollTest.captured_data1);
         assertEquals("OpCode", ArtNetOpCodes.OP_CODE_POLL, artPoll.getOpCode());
-        assertEquals("ProtocolVersion", _ArtNetPacket.PROTOCOL_VERSION, artPoll.getProtocolVersion());
+        assertEquals("ProtocolVersion", _VersionedArtNetPacket.PROTOCOL_VERSION, artPoll.getProtocolVersion());
         assertEquals("TalkToMe", 0x06, artPoll.getTalkToMe());
         assertEquals("Priority", 0x00, artPoll.getPriority());
 

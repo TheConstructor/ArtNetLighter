@@ -25,14 +25,14 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Test Class for {@link _ArtNetPacket}
+ * Test Class for {@link _VersionedArtNetPacket}
  */
-public class ArtNetPacketTest {
-    private _ArtNetPacket artNetPacket = null;
+public class _VersionedArtNetPacketTest {
+    private _VersionedArtNetPacket versionedArtNetPacket = null;
 
     @Before
     public void setUp() throws Exception {
-        this.artNetPacket = new _ArtNetPacket(ArtNetOpCodes.OP_CODE_POLL) {
+        this.versionedArtNetPacket = new _VersionedArtNetPacket(ArtNetOpCodes.OP_CODE_POLL) {
             @Override
             public byte[] constructPacket() {
                 return _ArtNetPacket.constructUnversionedPacket(_ArtNetPacket.SHORT_HEADER_LENGTH, ArtNetOpCodes.OP_CODE_POLL);
@@ -42,17 +42,17 @@ public class ArtNetPacketTest {
 
     @After
     public void tearDown() throws Exception {
-        this.artNetPacket = null;
+        this.versionedArtNetPacket = null;
     }
 
     @Test
     public void testGetOpCode() throws Exception {
-        assertEquals("Op Code was set to OP_POLL", ArtNetOpCodes.OP_CODE_POLL, this.artNetPacket.getOpCode());
+        assertEquals("Op Code was set to OP_POLL", ArtNetOpCodes.OP_CODE_POLL, this.versionedArtNetPacket.getOpCode());
     }
 
     @Test
     public void testConstructPacket1() throws Exception {
-        assertArrayEquals("constructUnversionedPacket should do the same as the static call", this.artNetPacket.constructPacket(), _ArtNetPacket.constructUnversionedPacket(_ArtNetPacket.SHORT_HEADER_LENGTH, ArtNetOpCodes.OP_CODE_POLL));
+        assertArrayEquals("constructUnversionedPacket should do the same as the static call", this.versionedArtNetPacket.constructPacket(), _ArtNetPacket.constructUnversionedPacket(_ArtNetPacket.SHORT_HEADER_LENGTH, ArtNetOpCodes.OP_CODE_POLL));
     }
 
     @Test
