@@ -58,7 +58,7 @@ public class ArtNetToolkit {
      * @return Net
      */
     public static byte getNet(final int portAddress) {
-        return (byte) ((portAddress & ArtNetToolkit.NET_MASK) >> ByteArrayToolkit.SHIFT_SECOND_BYTE);
+        return (byte) ((portAddress & ArtNetToolkit.NET_MASK) >> BinaryToolkit.SHIFT_SECOND_BYTE);
     }
 
 

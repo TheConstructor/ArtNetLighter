@@ -39,6 +39,27 @@ public class BinaryToolkit {
             {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80}
     };
 
+    /**
+     * Binary AND (&amp;) with this to get the lowest byte of a value
+     */
+    public static final int FIRST_BYTE_MASK = 0xff;
+    /**
+     * Left shift (&lt;&lt;) to get first byte to fourth postion, right shift (&gt;&gt;) to get fourth byte to first position.
+     */
+    public static final int SHIFT_FOURTH_BYTE = 24;
+    /**
+     * Left shift (&lt;&lt;) to get first byte to third postion, right shift (&gt;&gt;) to get third byte to first position.
+     */
+    public static final int SHIFT_THIRD_BYTE = 16;
+    /**
+     * Left shift (&lt;&lt;) to get first byte to second postion, right shift (&gt;&gt;) to get second byte to first position.
+     */
+    public static final int SHIFT_SECOND_BYTE = 8;
+
+    public static int getUnsignedValue(final byte input) {
+        return input & BinaryToolkit.FIRST_BYTE_MASK;
+    }
+
     public static boolean isBitSet(final int input, final int bit) {
         assert bit >= 0;
         assert bit <= 7;
