@@ -16,11 +16,10 @@
 
 package tc.vom.artNetLighter.infrastructure.packets;
 
+import tc.vom.artNetLighter.infrastructure.ByteArrayToolkit;
 import tc.vom.artNetLighter.infrastructure.constants.ArtNetOpCodes;
 
 import java.util.Arrays;
-
-import static tc.vom.artNetLighter.infrastructure.ArtNetToolkit.*;
 
 /**
  * Implements ArtAdress packet.
@@ -264,10 +263,10 @@ public class ArtAddress extends _VersionedArtNetPacket {
         final byte[] pData = _VersionedArtNetPacket.constructPacket(ArtAddress.PACKET_LENGTH, ArtNetOpCodes.OP_CODE_ADDRESS);
         pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH] = net;
         pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 1] = filler;
-        copyBytesToArray(shortName, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 2);
-        copyBytesToArray(longName, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 20);
-        copyBytesToArray(universesIn, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 84);
-        copyBytesToArray(universesOut, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 88);
+        ByteArrayToolkit.setBytes(shortName, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 2);
+        ByteArrayToolkit.setBytes(longName, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 20);
+        ByteArrayToolkit.setBytes(universesIn, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 84);
+        ByteArrayToolkit.setBytes(universesOut, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 88);
         pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 92] = subNet;
         pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 93] = video;
         pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 94] = command;
@@ -284,10 +283,10 @@ public class ArtAddress extends _VersionedArtNetPacket {
         }
         this.net = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH];
         this.filler = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 1];
-        this.shortName = copyStringFromArray(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 2, _ArtNetPacket.SHORT_NAME_LENGTH);
-        this.longName = copyStringFromArray(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 20, _ArtNetPacket.LONG_NAME_LENGTH);
-        this.universesIn = copyBytesFromArray(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 84, 4);
-        this.universesOut = copyBytesFromArray(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 88);
+        this.shortName = ByteArrayToolkit.getString(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 2, _ArtNetPacket.SHORT_NAME_LENGTH);
+        this.longName = ByteArrayToolkit.getString(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 20, _ArtNetPacket.LONG_NAME_LENGTH);
+        this.universesIn = ByteArrayToolkit.getBytes(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 84, 4);
+        this.universesOut = ByteArrayToolkit.getBytes(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 88);
         this.subNet = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 92];
         this.video = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 93];
         this.command = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 94];

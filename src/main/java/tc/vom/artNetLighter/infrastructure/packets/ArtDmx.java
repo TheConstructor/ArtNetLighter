@@ -17,7 +17,7 @@
 package tc.vom.artNetLighter.infrastructure.packets;
 
 
-import tc.vom.artNetLighter.infrastructure.ArtNetToolkit;
+import tc.vom.artNetLighter.infrastructure.ByteArrayToolkit;
 import tc.vom.artNetLighter.infrastructure.constants.ArtNetOpCodes;
 
 import java.util.Arrays;
@@ -100,9 +100,9 @@ public class ArtDmx extends _VersionedArtNetPacket {
         final byte[] result = _VersionedArtNetPacket.constructPacket(ArtDmx.MINIMUM_PACKET_SIZE + data.length, ArtNetOpCodes.OP_CODE_DMX);
         result[_VersionedArtNetPacket.FULL_HEADER_LENGTH] = sequence;
         result[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 1] = physical;
-        ArtNetToolkit.set2BytesLowToHigh(portAddress, result, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 2);
-        ArtNetToolkit.set2BytesHighToLow(data.length, result, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 4);
-        ArtNetToolkit.copyBytesToArray(data, result, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 6);
+        ByteArrayToolkit.set2BytesLowToHigh(portAddress, result, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 2);
+        ByteArrayToolkit.set2BytesHighToLow(data.length, result, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 4);
+        ByteArrayToolkit.setBytes(data, result, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 6);
         return result;
     }
 
@@ -116,9 +116,9 @@ public class ArtDmx extends _VersionedArtNetPacket {
         }
         this.sequence = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH];
         this.physical = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 1];
-        this.portAddress = ArtNetToolkit.get2BytesLowToHigh(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 2);
-        this.length = ArtNetToolkit.get2BytesHighToLow(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 4);
-        this.data = ArtNetToolkit.copyBytesFromArray(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 6, this.length);
+        this.portAddress = ByteArrayToolkit.get2BytesLowToHigh(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 2);
+        this.length = ByteArrayToolkit.get2BytesHighToLow(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 4);
+        this.data = ByteArrayToolkit.getBytes(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 6, this.length);
     }
 
     @Override

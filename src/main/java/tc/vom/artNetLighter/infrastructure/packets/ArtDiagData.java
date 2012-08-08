@@ -16,11 +16,10 @@
 
 package tc.vom.artNetLighter.infrastructure.packets;
 
+import tc.vom.artNetLighter.infrastructure.ByteArrayToolkit;
 import tc.vom.artNetLighter.infrastructure.constants.ArtNetOpCodes;
 
 import java.util.Arrays;
-
-import static tc.vom.artNetLighter.infrastructure.ArtNetToolkit.*;
 
 /**
  * Implements ArtDiagData packet.
@@ -100,7 +99,7 @@ public class ArtDiagData extends _VersionedArtNetPacket {
         }
         if (data[data.length - 1] != 0) {
             final byte[] t_data = new byte[data.length + 1];
-            copyBytesToArray(data, t_data, 0);
+            ByteArrayToolkit.setBytes(data, t_data, 0);
             data = t_data;
         }
         this.filler1 = filler1;
@@ -132,7 +131,7 @@ public class ArtDiagData extends _VersionedArtNetPacket {
     }
 
     public String getData() {
-        return copyStringFromArray(this.data, 0, this.data.length);
+        return ByteArrayToolkit.getString(this.data, 0, this.data.length);
     }
 
     public byte[] getDataBytes() {
@@ -158,7 +157,7 @@ public class ArtDiagData extends _VersionedArtNetPacket {
         }
         if (data[data.length - 1] != 0) {
             final byte[] t_data = new byte[data.length + 1];
-            copyBytesToArray(data, t_data, 0);
+            ByteArrayToolkit.setBytes(data, t_data, 0);
             data = t_data;
         }
         final byte[] pData = _VersionedArtNetPacket.constructPacket(ArtDiagData.MINIMUM_PACKET_LENGTH + data.length, ArtNetOpCodes.OP_CODE_DIAGNOSTIC_DATA);
@@ -166,8 +165,8 @@ public class ArtDiagData extends _VersionedArtNetPacket {
         pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 1] = priority;
         pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 2] = filler2;
         pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 3] = filler3;
-        set2BytesHighToLow(data.length, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 4);
-        copyBytesToArray(data, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 6);
+        ByteArrayToolkit.set2BytesHighToLow(data.length, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 4);
+        ByteArrayToolkit.setBytes(data, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 6);
         return pData;
     }
 
@@ -183,8 +182,8 @@ public class ArtDiagData extends _VersionedArtNetPacket {
         this.priority = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 1];
         this.filler2 = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 2];
         this.filler3 = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 3];
-        this.length = get2BytesHighToLow(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 4);
-        this.data = copyBytesFromArray(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 6, this.length);
+        this.length = ByteArrayToolkit.get2BytesHighToLow(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 4);
+        this.data = ByteArrayToolkit.getBytes(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 6, this.length);
     }
 
     @Override

@@ -16,11 +16,10 @@
 
 package tc.vom.artNetLighter.infrastructure.packets;
 
+import tc.vom.artNetLighter.infrastructure.ByteArrayToolkit;
 import tc.vom.artNetLighter.infrastructure.constants.ArtNetOpCodes;
 
 import java.util.Arrays;
-
-import static tc.vom.artNetLighter.infrastructure.ArtNetToolkit.*;
 
 /**
  * Implements ArtInput packet.
@@ -91,8 +90,8 @@ public class ArtInput extends _VersionedArtNetPacket {
         final byte[] pData = _VersionedArtNetPacket.constructPacket(ArtInput.PACKET_LENGTH, ArtNetOpCodes.OP_CODE_INPUT);
         pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH] = filler1;
         pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 1] = filler2;
-        set2BytesHighToLow(numPorts, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 2);
-        copyBytesToArray(input, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 4);
+        ByteArrayToolkit.set2BytesHighToLow(numPorts, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 2);
+        ByteArrayToolkit.setBytes(input, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 4);
         return pData;
     }
 
@@ -106,8 +105,8 @@ public class ArtInput extends _VersionedArtNetPacket {
         }
         this.filler1 = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH];
         this.filler2 = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 1];
-        this.numPorts = get2BytesHighToLow(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 2);
-        this.input = copyBytesFromArray(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 4);
+        this.numPorts = ByteArrayToolkit.get2BytesHighToLow(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 2);
+        this.input = ByteArrayToolkit.getBytes(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 4);
     }
 
     @Override

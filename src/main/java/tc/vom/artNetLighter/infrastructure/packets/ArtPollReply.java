@@ -16,13 +16,12 @@
 
 package tc.vom.artNetLighter.infrastructure.packets;
 
+import tc.vom.artNetLighter.infrastructure.ByteArrayToolkit;
 import tc.vom.artNetLighter.infrastructure.constants.ArtNetNodeReportCodes;
 import tc.vom.artNetLighter.infrastructure.constants.ArtNetOpCodes;
 import tc.vom.artNetLighter.infrastructure.constants.ArtNetStyleCodes;
 
 import java.util.Arrays;
-
-import static tc.vom.artNetLighter.infrastructure.ArtNetToolkit.*;
 
 /**
  * Used to hold the data of an ArtPollReply-Packet.
@@ -478,34 +477,34 @@ public class ArtPollReply extends _ArtNetPacket implements ArtNetStyleCodes, Art
 
         final byte[] result = _ArtNetPacket.constructUnversionedPacket(ArtPollReply.PACKET_LENGTH, ArtNetOpCodes.OP_CODE_POLL_REPLY);
 
-        set4BytesHighToLow(ipAddress, result, _ArtNetPacket.SHORT_HEADER_LENGTH);
-        set2BytesLowToHigh(port, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 4);
-        set2BytesHighToLow(versionInfo, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 6);
+        ByteArrayToolkit.set4BytesHighToLow(ipAddress, result, _ArtNetPacket.SHORT_HEADER_LENGTH);
+        ByteArrayToolkit.set2BytesLowToHigh(port, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 4);
+        ByteArrayToolkit.set2BytesHighToLow(versionInfo, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 6);
         result[_ArtNetPacket.SHORT_HEADER_LENGTH + 8] = (byte) (net & 0x7f);
         result[_ArtNetPacket.SHORT_HEADER_LENGTH + 9] = (byte) (subNet & 0x0f);
-        set2BytesHighToLow(oem, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 10);
+        ByteArrayToolkit.set2BytesHighToLow(oem, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 10);
         result[_ArtNetPacket.SHORT_HEADER_LENGTH + 12] = ubea;
         result[_ArtNetPacket.SHORT_HEADER_LENGTH + 13] = status1;
-        set2BytesLowToHigh(estaManufacturer, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 14);
-        copyBytesToArray(shortName, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 16);
-        copyBytesToArray(longName, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 34);
-        copyBytesToArray(nodeReport, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 98);
-        set2BytesHighToLow(numPorts, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 162);
-        copyBytesToArray(portTypes, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 164);
-        copyBytesToArray(goodInput, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 168);
-        copyBytesToArray(goodOutput, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 172);
-        copyBytesToArray(universesIn, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 176);
-        copyBytesToArray(universesOut, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 180);
+        ByteArrayToolkit.set2BytesLowToHigh(estaManufacturer, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 14);
+        ByteArrayToolkit.setBytes(shortName, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 16);
+        ByteArrayToolkit.setBytes(longName, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 34);
+        ByteArrayToolkit.setBytes(nodeReport, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 98);
+        ByteArrayToolkit.set2BytesHighToLow(numPorts, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 162);
+        ByteArrayToolkit.setBytes(portTypes, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 164);
+        ByteArrayToolkit.setBytes(goodInput, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 168);
+        ByteArrayToolkit.setBytes(goodOutput, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 172);
+        ByteArrayToolkit.setBytes(universesIn, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 176);
+        ByteArrayToolkit.setBytes(universesOut, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 180);
         result[_ArtNetPacket.SHORT_HEADER_LENGTH + 184] = video;
         result[_ArtNetPacket.SHORT_HEADER_LENGTH + 185] = macro;
         result[_ArtNetPacket.SHORT_HEADER_LENGTH + 186] = remote;
-        copyBytesToArray(spare, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 187);
+        ByteArrayToolkit.setBytes(spare, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 187);
         result[_ArtNetPacket.SHORT_HEADER_LENGTH + 190] = style;
-        copyBytesToArray(macAddress, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 191);
-        set4BytesHighToLow(bindIP, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 197);
+        ByteArrayToolkit.setBytes(macAddress, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 191);
+        ByteArrayToolkit.set4BytesHighToLow(bindIP, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 197);
         result[_ArtNetPacket.SHORT_HEADER_LENGTH + 201] = bindIndex;
         result[_ArtNetPacket.SHORT_HEADER_LENGTH + 202] = status2;
-        copyBytesToArray(filler, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 203);
+        ByteArrayToolkit.setBytes(filler, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 203);
         return result;
     }
 
@@ -518,32 +517,32 @@ public class ArtPollReply extends _ArtNetPacket implements ArtNetStyleCodes, Art
             throw new IllegalArgumentException("Provided data specifies a wrong OpCode");
         }
 
-        this.ipAddress = get4BytesHighToLow(data, _ArtNetPacket.SHORT_HEADER_LENGTH);
-        this.port = get2BytesLowToHigh(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 4);
-        this.versionInfo = get2BytesHighToLow(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 6);
+        this.ipAddress = ByteArrayToolkit.get4BytesHighToLow(data, _ArtNetPacket.SHORT_HEADER_LENGTH);
+        this.port = ByteArrayToolkit.get2BytesLowToHigh(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 4);
+        this.versionInfo = ByteArrayToolkit.get2BytesHighToLow(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 6);
         this.net = (byte) (data[_ArtNetPacket.SHORT_HEADER_LENGTH + 8] & 0x7f);
         this.subNet = (byte) (data[_ArtNetPacket.SHORT_HEADER_LENGTH + 9] & 0x0f);
-        this.oem = get2BytesHighToLow(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 10);
+        this.oem = ByteArrayToolkit.get2BytesHighToLow(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 10);
         this.ubea = data[_ArtNetPacket.SHORT_HEADER_LENGTH + 12];
         this.status1 = data[_ArtNetPacket.SHORT_HEADER_LENGTH + 13];
-        this.estaManufacturer = get2BytesLowToHigh(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 14);
-        this.shortName = copyStringFromArray(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 16, 17);
-        this.longName = copyStringFromArray(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 34, 63);
-        this.nodeReport = copyStringFromArray(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 98, 63);
-        this.numPorts = get2BytesHighToLow(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 162);
-        this.portTypes = copyBytesFromArray(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 164, 4);
-        this.goodInput = copyBytesFromArray(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 168, 4);
-        this.goodOutput = copyBytesFromArray(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 172, 4);
-        this.universesIn = copyBytesFromArray(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 176, 4);
-        this.universesOut = copyBytesFromArray(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 180, 4);
+        this.estaManufacturer = ByteArrayToolkit.get2BytesLowToHigh(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 14);
+        this.shortName = ByteArrayToolkit.getString(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 16, 17);
+        this.longName = ByteArrayToolkit.getString(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 34, 63);
+        this.nodeReport = ByteArrayToolkit.getString(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 98, 63);
+        this.numPorts = ByteArrayToolkit.get2BytesHighToLow(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 162);
+        this.portTypes = ByteArrayToolkit.getBytes(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 164, 4);
+        this.goodInput = ByteArrayToolkit.getBytes(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 168, 4);
+        this.goodOutput = ByteArrayToolkit.getBytes(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 172, 4);
+        this.universesIn = ByteArrayToolkit.getBytes(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 176, 4);
+        this.universesOut = ByteArrayToolkit.getBytes(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 180, 4);
         this.video = data[_ArtNetPacket.SHORT_HEADER_LENGTH + 184];
         this.macro = data[_ArtNetPacket.SHORT_HEADER_LENGTH + 185];
         this.remote = data[_ArtNetPacket.SHORT_HEADER_LENGTH + 186];
-        this.spare = copyBytesFromArray(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 187, 3);
+        this.spare = ByteArrayToolkit.getBytes(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 187, 3);
         this.style = data[_ArtNetPacket.SHORT_HEADER_LENGTH + 190];
-        this.macAddress = copyBytesFromArray(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 191, 6);
+        this.macAddress = ByteArrayToolkit.getBytes(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 191, 6);
         if (data.length > (_ArtNetPacket.SHORT_HEADER_LENGTH + 201)) {
-            this.bindIP = get4BytesHighToLow(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 197);
+            this.bindIP = ByteArrayToolkit.get4BytesHighToLow(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 197);
             this.bindIndex = data[_ArtNetPacket.SHORT_HEADER_LENGTH + 201];
         } else {
             this.bindIP = 0;
@@ -555,7 +554,7 @@ public class ArtPollReply extends _ArtNetPacket implements ArtNetStyleCodes, Art
             this.status2 = 0;
         }
         if (data.length > (_ArtNetPacket.SHORT_HEADER_LENGTH + 203)) {
-            this.filler = copyBytesFromArray(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 203);
+            this.filler = ByteArrayToolkit.getBytes(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 203);
         } else {
             this.filler = new byte[0];
         }

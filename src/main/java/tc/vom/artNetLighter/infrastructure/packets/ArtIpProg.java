@@ -16,10 +16,8 @@
 
 package tc.vom.artNetLighter.infrastructure.packets;
 
-import tc.vom.artNetLighter.infrastructure.ArtNetToolkit;
+import tc.vom.artNetLighter.infrastructure.ByteArrayToolkit;
 import tc.vom.artNetLighter.infrastructure.constants.ArtNetOpCodes;
-
-import static tc.vom.artNetLighter.infrastructure.ArtNetToolkit.*;
 
 /**
  * Implements ArtIpProg packet.
@@ -124,13 +122,13 @@ public class ArtIpProg extends _VersionedArtNetPacket {
 
     public static byte[] constructPacket(final int filler1, final byte command, final byte filler2, final int progIp, final int progSm, final int progPort, final byte[] spare) {
         final byte[] pData = _VersionedArtNetPacket.constructPacket(ArtIpProg.MINIMUM_PACKET_LENGTH + spare.length, ArtNetOpCodes.OP_CODE_IP_PROGRAM);
-        set2BytesHighToLow(filler1, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH);
+        ByteArrayToolkit.set2BytesHighToLow(filler1, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH);
         pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 2] = command;
         pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 3] = filler2;
-        set4BytesHighToLow(progIp, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 4);
-        set4BytesHighToLow(progSm, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 8);
-        set2BytesHighToLow(progPort, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 12);
-        copyBytesToArray(spare, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 14);
+        ByteArrayToolkit.set4BytesHighToLow(progIp, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 4);
+        ByteArrayToolkit.set4BytesHighToLow(progSm, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 8);
+        ByteArrayToolkit.set2BytesHighToLow(progPort, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 12);
+        ByteArrayToolkit.setBytes(spare, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 14);
         return pData;
     }
 
@@ -142,14 +140,14 @@ public class ArtIpProg extends _VersionedArtNetPacket {
         if (pData.length < ArtIpProg.MINIMUM_PACKET_LENGTH) {
             throw new IllegalArgumentException("Packet needs to be at least " + ArtIpProg.MINIMUM_PACKET_LENGTH + " bytes");
         }
-        this.filler1 = get2BytesHighToLow(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH);
+        this.filler1 = ByteArrayToolkit.get2BytesHighToLow(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH);
         this.command = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 2];
         this.filler2 = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 3];
-        this.progIp = get4BytesHighToLow(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 4);
-        this.progSm = get4BytesHighToLow(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 8);
-        this.progPort = get2BytesHighToLow(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 12);
+        this.progIp = ByteArrayToolkit.get4BytesHighToLow(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 4);
+        this.progSm = ByteArrayToolkit.get4BytesHighToLow(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 8);
+        this.progPort = ByteArrayToolkit.get2BytesHighToLow(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 12);
         if (pData.length > (_VersionedArtNetPacket.FULL_HEADER_LENGTH + 14)) {
-            this.spare = ArtNetToolkit.copyBytesFromArray(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 14);
+            this.spare = ByteArrayToolkit.getBytes(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 14);
         } else {
             this.spare = ArtIpProg.SPARE_BYTES;
         }

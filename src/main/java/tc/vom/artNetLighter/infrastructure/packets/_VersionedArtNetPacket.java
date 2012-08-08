@@ -16,8 +16,8 @@
 
 package tc.vom.artNetLighter.infrastructure.packets;
 
-import static tc.vom.artNetLighter.infrastructure.ArtNetToolkit.get2BytesHighToLow;
-import static tc.vom.artNetLighter.infrastructure.ArtNetToolkit.set2BytesHighToLow;
+import static tc.vom.artNetLighter.infrastructure.ByteArrayToolkit.get2BytesHighToLow;
+import static tc.vom.artNetLighter.infrastructure.ByteArrayToolkit.set2BytesHighToLow;
 
 /**
  * Represents an Art-Net packet that could be send or received.

@@ -21,8 +21,8 @@ import tc.vom.artNetLighter.infrastructure.constants.ArtNetOpCodes;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
-import static tc.vom.artNetLighter.infrastructure.ArtNetToolkit.get2BytesLowToHigh;
-import static tc.vom.artNetLighter.infrastructure.ArtNetToolkit.set2BytesLowToHigh;
+import static tc.vom.artNetLighter.infrastructure.ByteArrayToolkit.get2BytesLowToHigh;
+import static tc.vom.artNetLighter.infrastructure.ByteArrayToolkit.set2BytesLowToHigh;
 
 /**
  * Represents an Art-Net packet that could be send or received.
