@@ -95,6 +95,8 @@ public abstract class _ArtNetPacket implements ArtNetOpCodes {
                 return new ArtDmx(pData);
             case ArtNetOpCodes.OP_CODE_FIRMWARE_MASTER:
                 return new ArtFirmwareMaster(pData);
+            case ArtNetOpCodes.OP_CODE_FIRMWARE_REPLY:
+                return new ArtFirmwareReply(pData);
             case ArtNetOpCodes.OP_CODE_INPUT:
                 return new ArtInput(pData);
             case ArtNetOpCodes.OP_CODE_IP_PROGRAM:
