@@ -24,6 +24,29 @@ import static org.junit.Assert.*;
  * Test for {@link BinaryToolkit}
  */
 public class BinaryToolkitTest {
+
+    @Test
+    public void test_CastIntToByte() throws Exception {
+        final int[] input = {0, -65536, 65535, -1}; // same as 0x00000000, 0xffff0000, 0x0000ffff, 0xffffffff for signed int
+        final byte[] result = {0, 0, -1, -1}; // same as 0x00, 0x00, 0xff, 0xff for signed byte
+        for (int i = 0; i < input.length; i++) {
+            assertEquals("(byte)" + input[i], result[i], (byte) input[i]);
+        }
+    }
+
+    @Test
+    public void test_CastByteToInt() throws Exception {
+        final byte[] input = {0, -1}; // same as 0x00, 0xff for signed byte
+        final int[] straigt_cast_result = {0, -1}; // same as 0x00000000, 0xffffffff for signed int
+        final int[] binary_cast_result = {0, 255}; // same as 0x00000000, 0x000000ff for signed int
+        for (int i = 0; i < input.length; i++) {
+            assertEquals("(int)" + input[i], straigt_cast_result[i], input[i]);
+        }
+        for (int i = 0; i < input.length; i++) {
+            assertEquals(input[i] + " & 0xff", binary_cast_result[i], input[i] & 0xff);
+        }
+    }
+
     @Test
     public void testBitMask() throws Exception {
         String lead = "";
