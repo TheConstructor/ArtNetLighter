@@ -187,4 +187,21 @@ public class ByteArrayToolkitTest {
             // Expected
         }
     }
+
+    @Test
+    public void testGetShorts() throws Exception {
+        final byte[] input = {0x77, 0x00, 0x00, 0x00, (byte) 0xff, (byte) 0xff, 0x00, (byte) 0xff, (byte) 0xff};
+        final short[] result = {0x0000, 0x00ff, (short) 0xff00, (short) 0xffff};
+        assertArrayEquals("getShorts", result, ByteArrayToolkit.getShorts(input, 1));
+    }
+
+    @Test
+    public void testSetShorts() throws Exception {
+        final short[] input = {0x0000, 0x00ff, (short) 0xff00, (short) 0xffff};
+        final byte[] result = {0x77, 0x00, 0x00, 0x00, (byte) 0xff, (byte) 0xff, 0x00, (byte) 0xff, (byte) 0xff};
+        final byte[] target = new byte[result.length];
+        Arrays.fill(target, (byte) 0x77);
+        ByteArrayToolkit.setShorts(input, target, 1);
+        assertArrayEquals("setShorts", result, target);
+    }
 }

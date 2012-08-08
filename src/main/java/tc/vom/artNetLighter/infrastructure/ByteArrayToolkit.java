@@ -25,9 +25,34 @@ import java.util.Arrays;
  */
 public class ByteArrayToolkit {
 
+    /**
+     * Binary AND (&amp;) with this to get the lowest byte of a value
+     */
+    public static final int FIRST_BYTE_MASK = 0xff;
+    /**
+     * Left shift (&lt;&lt;) to get first byte to fourth postion, right shift (&gt;&gt;) to get fourth byte to first position.
+     */
+    public static final int SHIFT_FOURTH_BYTE = 24;
+    /**
+     * Left shift (&lt;&lt;) to get first byte to third postion, right shift (&gt;&gt;) to get third byte to first position.
+     */
+    public static final int SHIFT_THIRD_BYTE = 16;
+    /**
+     * Left shift (&lt;&lt;) to get first byte to second postion, right shift (&gt;&gt;) to get second byte to first position.
+     */
+    public static final int SHIFT_SECOND_BYTE = 8;
+
     public static void setBytes(final byte[] from, final byte[] to, final int offset) {
         if (from.length != 0) {
             System.arraycopy(from, 0, to, offset, from.length);
+        }
+    }
+
+    public static void setShorts(final short[] from, final byte[] to, final int offset) {
+        if (from.length != 0) {
+            for (int i = 0; i < from.length; i++) {
+                ByteArrayToolkit.set2BytesHighToLow(from[i], to, offset + (i * 2));
+            }
         }
     }
 
@@ -58,6 +83,25 @@ public class ByteArrayToolkit {
         return ByteArrayToolkit.getBytes(from, offset, from.length - offset);
     }
 
+    public static short[] getShorts(final byte[] from, final int offset, final int byteLength) {
+        assert offset >= 0;
+        assert byteLength <= (from.length - offset);
+        assert (byteLength % 2) == 0;
+        final short[] result = new short[byteLength / 2];
+        for (int i = 0; i < byteLength; i += 2) {
+            result[i / 2] = (short) ByteArrayToolkit.get2BytesHighToLow(from, offset + i);
+        }
+        return result;
+    }
+
+    public static short[] getShorts(final byte[] from, final int offset) {
+        assert offset >= 0;
+        if (offset == from.length) {
+            return new short[0];
+        }
+        return ByteArrayToolkit.getShorts(from, offset, from.length - offset);
+    }
+
     public static String getString(final byte[] from, final int offset, final int length) {
         final String shortName = new String(from, offset, length, _ArtNetPacket.STRING_CHARSET);
         final int nullTerminator = shortName.indexOf(0);
@@ -69,50 +113,50 @@ public class ByteArrayToolkit {
 
     public static int get4BytesHighToLow(final byte[] from, final int offset) {
         assert from.length > (offset + 3);
-        return ((from[offset] & 0xff) << 24) | ((from[offset + 1] & 0xff) << 16) | ((from[offset + 2] & 0xff) << 8) | (from[offset + 3] & 0xff);
+        return ((from[offset] & ByteArrayToolkit.FIRST_BYTE_MASK) << ByteArrayToolkit.SHIFT_FOURTH_BYTE) | ((from[offset + 1] & ByteArrayToolkit.FIRST_BYTE_MASK) << ByteArrayToolkit.SHIFT_THIRD_BYTE) | ((from[offset + 2] & ByteArrayToolkit.FIRST_BYTE_MASK) << ByteArrayToolkit.SHIFT_SECOND_BYTE) | (from[offset + 3] & ByteArrayToolkit.FIRST_BYTE_MASK);
     }
 
     public static int get4BytesLowToHigh(final byte[] from, final int offset) {
         assert from.length > (offset + 3);
-        return ((from[offset + 3] & 0xff) << 24) | ((from[offset + 2] & 0xff) << 16) | ((from[offset + 1] & 0xff) << 8) | (from[offset] & 0xff);
+        return ((from[offset + 3] & ByteArrayToolkit.FIRST_BYTE_MASK) << ByteArrayToolkit.SHIFT_FOURTH_BYTE) | ((from[offset + 2] & ByteArrayToolkit.FIRST_BYTE_MASK) << ByteArrayToolkit.SHIFT_THIRD_BYTE) | ((from[offset + 1] & ByteArrayToolkit.FIRST_BYTE_MASK) << ByteArrayToolkit.SHIFT_SECOND_BYTE) | (from[offset] & ByteArrayToolkit.FIRST_BYTE_MASK);
     }
 
     public static int get2BytesHighToLow(final byte[] from, final int offset) {
         assert from.length > (offset + 1);
-        return ((from[offset] & 0xff) << 8) | (from[offset + 1] & 0xff);
+        return ((from[offset] & ByteArrayToolkit.FIRST_BYTE_MASK) << ByteArrayToolkit.SHIFT_SECOND_BYTE) | (from[offset + 1] & ByteArrayToolkit.FIRST_BYTE_MASK);
     }
 
     public static int get2BytesLowToHigh(final byte[] from, final int offset) {
         assert from.length > (offset + 1);
-        return ((from[offset + 1] & 0xff) << 8) | (from[offset] & 0xff);
+        return ((from[offset + 1] & ByteArrayToolkit.FIRST_BYTE_MASK) << ByteArrayToolkit.SHIFT_SECOND_BYTE) | (from[offset] & ByteArrayToolkit.FIRST_BYTE_MASK);
     }
 
     public static void set4BytesHighToLow(final int from, final byte[] to, final int offset) {
         assert to.length > (offset + 3);
-        to[offset] = (byte) ((from >> 24) & 0xff);
-        to[offset + 1] = (byte) ((from >> 16) & 0xff);
-        to[offset + 2] = (byte) ((from >> 8) & 0xff);
-        to[offset + 3] = (byte) (from & 0xff);
+        to[offset] = (byte) ((from >> ByteArrayToolkit.SHIFT_FOURTH_BYTE) & ByteArrayToolkit.FIRST_BYTE_MASK);
+        to[offset + 1] = (byte) ((from >> ByteArrayToolkit.SHIFT_THIRD_BYTE) & ByteArrayToolkit.FIRST_BYTE_MASK);
+        to[offset + 2] = (byte) ((from >> ByteArrayToolkit.SHIFT_SECOND_BYTE) & ByteArrayToolkit.FIRST_BYTE_MASK);
+        to[offset + 3] = (byte) (from & ByteArrayToolkit.FIRST_BYTE_MASK);
     }
 
     public static void set4BytesLowToHigh(final int from, final byte[] to, final int offset) {
         assert to.length > (offset + 3);
-        to[offset + 3] = (byte) ((from >> 24) & 0xff);
-        to[offset + 2] = (byte) ((from >> 16) & 0xff);
-        to[offset + 1] = (byte) ((from >> 8) & 0xff);
-        to[offset] = (byte) (from & 0xff);
+        to[offset + 3] = (byte) ((from >> ByteArrayToolkit.SHIFT_FOURTH_BYTE) & ByteArrayToolkit.FIRST_BYTE_MASK);
+        to[offset + 2] = (byte) ((from >> ByteArrayToolkit.SHIFT_THIRD_BYTE) & ByteArrayToolkit.FIRST_BYTE_MASK);
+        to[offset + 1] = (byte) ((from >> ByteArrayToolkit.SHIFT_SECOND_BYTE) & ByteArrayToolkit.FIRST_BYTE_MASK);
+        to[offset] = (byte) (from & ByteArrayToolkit.FIRST_BYTE_MASK);
     }
 
     public static void set2BytesHighToLow(final int from, final byte[] to, final int offset) {
         assert to.length > (offset + 1);
-        to[offset] = (byte) ((from >> 8) & 0xff);
-        to[offset + 1] = (byte) (from & 0xff);
+        to[offset] = (byte) ((from >> ByteArrayToolkit.SHIFT_SECOND_BYTE) & ByteArrayToolkit.FIRST_BYTE_MASK);
+        to[offset + 1] = (byte) (from & ByteArrayToolkit.FIRST_BYTE_MASK);
     }
 
     public static void set2BytesLowToHigh(final int from, final byte[] to, final int offset) {
         assert to.length > (offset + 1);
-        to[offset + 1] = (byte) ((from >> 8) & 0xff);
-        to[offset] = (byte) (from & 0xff);
+        to[offset + 1] = (byte) ((from >> ByteArrayToolkit.SHIFT_SECOND_BYTE) & ByteArrayToolkit.FIRST_BYTE_MASK);
+        to[offset] = (byte) (from & ByteArrayToolkit.FIRST_BYTE_MASK);
     }
 
 }
