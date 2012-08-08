@@ -27,7 +27,18 @@ import java.util.Arrays;
 public class ArtAddress extends _VersionedArtNetPacket {
 
     public static final byte FILLER = 0;
-    public static final int PACKET_LENGTH = _VersionedArtNetPacket.FULL_HEADER_LENGTH + 95;
+
+    private static final int START_NET = _VersionedArtNetPacket.FULL_HEADER_LENGTH;
+    private static final int START_FILLER = ArtAddress.START_NET + 1;
+    private static final int START_SHORT_NAME = ArtAddress.START_FILLER + 1;
+    private static final int START_LONG_NAME = ArtAddress.START_SHORT_NAME + _ArtNetPacket.SHORT_NAME_LENGTH;
+    private static final int START_UNIVERSE_IN = ArtAddress.START_LONG_NAME + _ArtNetPacket.LONG_NAME_LENGTH;
+    private static final int START_UNIVERSE_OUT = ArtAddress.START_UNIVERSE_IN + 4;
+    private static final int START_SUB_NET = ArtAddress.START_UNIVERSE_OUT + 4;
+    private static final int START_VIDEO = ArtAddress.START_SUB_NET + 1;
+    private static final int START_COMMAND = ArtAddress.START_VIDEO + 1;
+
+    public static final int PACKET_LENGTH = ArtAddress.START_COMMAND + 1;
 
     public static interface CommandConstants {
 
@@ -261,15 +272,15 @@ public class ArtAddress extends _VersionedArtNetPacket {
             throw new IllegalArgumentException("Maximum universesOut.length is 4");
         }
         final byte[] pData = _VersionedArtNetPacket.constructPacket(ArtAddress.PACKET_LENGTH, ArtNetOpCodes.OP_CODE_ADDRESS);
-        pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH] = net;
-        pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 1] = filler;
-        ByteArrayToolkit.setBytes(shortName, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 2);
-        ByteArrayToolkit.setBytes(longName, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 20);
-        ByteArrayToolkit.setBytes(universesIn, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 84);
-        ByteArrayToolkit.setBytes(universesOut, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 88);
-        pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 92] = subNet;
-        pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 93] = video;
-        pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 94] = command;
+        pData[ArtAddress.START_NET] = net;
+        pData[ArtAddress.START_FILLER] = filler;
+        ByteArrayToolkit.setBytes(shortName, pData, ArtAddress.START_SHORT_NAME);
+        ByteArrayToolkit.setBytes(longName, pData, ArtAddress.START_LONG_NAME);
+        ByteArrayToolkit.setBytes(universesIn, pData, ArtAddress.START_UNIVERSE_IN);
+        ByteArrayToolkit.setBytes(universesOut, pData, ArtAddress.START_UNIVERSE_OUT);
+        pData[ArtAddress.START_SUB_NET] = subNet;
+        pData[ArtAddress.START_VIDEO] = video;
+        pData[ArtAddress.START_COMMAND] = command;
         return pData;
     }
 
@@ -281,15 +292,15 @@ public class ArtAddress extends _VersionedArtNetPacket {
         if (pData.length < ArtAddress.PACKET_LENGTH) {
             throw new IllegalArgumentException("Packet needs to be at least " + ArtAddress.PACKET_LENGTH + " bytes");
         }
-        this.net = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH];
-        this.filler = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 1];
-        this.shortName = ByteArrayToolkit.getString(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 2, _ArtNetPacket.SHORT_NAME_LENGTH);
-        this.longName = ByteArrayToolkit.getString(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 20, _ArtNetPacket.LONG_NAME_LENGTH);
-        this.universesIn = ByteArrayToolkit.getBytes(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 84, 4);
-        this.universesOut = ByteArrayToolkit.getBytes(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 88);
-        this.subNet = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 92];
-        this.video = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 93];
-        this.command = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 94];
+        this.net = pData[ArtAddress.START_NET];
+        this.filler = pData[ArtAddress.START_FILLER];
+        this.shortName = ByteArrayToolkit.getString(pData, ArtAddress.START_SHORT_NAME, _ArtNetPacket.SHORT_NAME_LENGTH);
+        this.longName = ByteArrayToolkit.getString(pData, ArtAddress.START_LONG_NAME, _ArtNetPacket.LONG_NAME_LENGTH);
+        this.universesIn = ByteArrayToolkit.getBytes(pData, ArtAddress.START_UNIVERSE_IN, 4);
+        this.universesOut = ByteArrayToolkit.getBytes(pData, ArtAddress.START_UNIVERSE_OUT);
+        this.subNet = pData[ArtAddress.START_SUB_NET];
+        this.video = pData[ArtAddress.START_VIDEO];
+        this.command = pData[ArtAddress.START_COMMAND];
     }
 
     @Override

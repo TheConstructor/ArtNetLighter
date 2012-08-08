@@ -16,6 +16,7 @@
 
 package tc.vom.artNetLighter.infrastructure.packets;
 
+import tc.vom.artNetLighter.infrastructure.ArtNetToolkit;
 import tc.vom.artNetLighter.infrastructure.ByteArrayToolkit;
 import tc.vom.artNetLighter.infrastructure.constants.ArtNetNodeReportCodes;
 import tc.vom.artNetLighter.infrastructure.constants.ArtNetOpCodes;
@@ -31,8 +32,52 @@ public class ArtPollReply extends _ArtNetPacket implements ArtNetStyleCodes, Art
     public static final byte[] SPARE_BYTES = {0, 0, 0};
     public static final byte[] FILLER_BYTES = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-    public static final int MIN_PACKET_LENGTH = _ArtNetPacket.SHORT_HEADER_LENGTH + 203;
-    public static final int PACKET_LENGTH = _ArtNetPacket.SHORT_HEADER_LENGTH + 229;
+    public static final int NODE_REPORT_LENGTH = 64;
+    public static final int MAXIMUM_NUM_PORTS = 4;
+    public static final int PORT_TYPES_LENGTH = 4;
+    public static final int GOOD_INPUT_LENGTH = 4;
+    public static final int GOOD_OUTPUT_LENGTH = 4;
+    public static final int UNIVERSES_IN_LENGTH = 4;
+    public static final int UNIVERSES_OUT_LENGTH = 4;
+    public static final int SPARE_LENGTH = 3;
+    public static final int MAC_ADDRESS_LENGTH = 6;
+    public static final int FILLER_LENGTH = 26;
+
+    private static final int START_IP_ADDRESS = _ArtNetPacket.SHORT_HEADER_LENGTH;
+    private static final int START_PORT = ArtPollReply.START_IP_ADDRESS + 4;
+    private static final int START_VERSION_INFO = ArtPollReply.START_PORT + 2;
+    private static final int START_NET = ArtPollReply.START_VERSION_INFO + 2;
+    private static final int START_SUB_NET = ArtPollReply.START_NET + 1;
+    private static final int START_OEM = ArtPollReply.START_SUB_NET + 1;
+    private static final int START_UBEA = ArtPollReply.START_OEM + 2;
+    private static final int START_STATUS1 = ArtPollReply.START_UBEA + 1;
+    private static final int START_ESTA_MANUFACTURER = ArtPollReply.START_STATUS1 + 1;
+    private static final int START_SHORT_NAME = ArtPollReply.START_ESTA_MANUFACTURER + 2;
+    private static final int START_LONG_NAME = ArtPollReply.START_SHORT_NAME + _ArtNetPacket.SHORT_NAME_LENGTH;
+    private static final int START_NODE_REPORT = ArtPollReply.START_LONG_NAME + _ArtNetPacket.LONG_NAME_LENGTH;
+    private static final int START_NUM_PORTS = ArtPollReply.START_NODE_REPORT + ArtPollReply.NODE_REPORT_LENGTH;
+    private static final int START_PORT_TYPES = ArtPollReply.START_NUM_PORTS + 2;
+    private static final int START_GOOD_INPUT = ArtPollReply.START_PORT_TYPES + ArtPollReply.PORT_TYPES_LENGTH;
+    private static final int START_GOOD_OUTPUT = ArtPollReply.START_GOOD_INPUT + ArtPollReply.GOOD_INPUT_LENGTH;
+    private static final int START_UNIVERSES_IN = ArtPollReply.START_GOOD_OUTPUT + ArtPollReply.GOOD_OUTPUT_LENGTH;
+    private static final int START_UNIVERSES_OUT = ArtPollReply.START_UNIVERSES_IN + ArtPollReply.UNIVERSES_IN_LENGTH;
+    private static final int START_VIDEO = ArtPollReply.START_UNIVERSES_OUT + ArtPollReply.UNIVERSES_OUT_LENGTH;
+    private static final int START_MACRO = ArtPollReply.START_VIDEO + 1;
+    private static final int START_REMOTE = ArtPollReply.START_MACRO + 1;
+    private static final int START_SPARE = ArtPollReply.START_REMOTE + 1;
+    private static final int START_STYLE = ArtPollReply.START_SPARE + ArtPollReply.SPARE_LENGTH;
+    private static final int START_MAC_ADDRESS = ArtPollReply.START_STYLE + 1;
+    private static final int START_BIND_IP = ArtPollReply.START_MAC_ADDRESS + ArtPollReply.MAC_ADDRESS_LENGTH;
+    private static final int START_BIND_INDEX = ArtPollReply.START_BIND_IP + 4;
+    private static final int START_STATUS2 = ArtPollReply.START_BIND_INDEX + 1;
+    private static final int START_FILLER = ArtPollReply.START_STATUS2 + 1;
+
+    /**
+     * {@link #bindIP} and following fields are rather "new", so this length differs greatly from {@link #PACKET_LENGTH}
+     */
+    public static final int MINIMUM_PACKET_LENGTH = ArtPollReply.START_BIND_IP;
+    public static final int PACKET_LENGTH = ArtPollReply.START_FILLER + ArtPollReply.FILLER_LENGTH;
+
     /**
      * 4 Byte IP-Address
      */
@@ -444,125 +489,122 @@ public class ArtPollReply extends _ArtNetPacket implements ArtNetStyleCodes, Art
         if ((longName.length >= _ArtNetPacket.LONG_NAME_LENGTH) && ((longName.length != _ArtNetPacket.LONG_NAME_LENGTH) || (longName[_ArtNetPacket.LONG_NAME_LENGTH - 1] != 0))) {
             throw new IllegalArgumentException("Long Name has a maximum length of " + (_ArtNetPacket.LONG_NAME_LENGTH - 1) + " Bytes.");
         }
-        if ((nodeReport.length > 63) && ((nodeReport.length != 64) || (nodeReport[63] != 0))) {
-            throw new IllegalArgumentException("Node Report has a maximum length of 63 Bytes.");
+        if ((nodeReport.length > ArtPollReply.NODE_REPORT_LENGTH) || ((nodeReport.length == ArtPollReply.NODE_REPORT_LENGTH) && (nodeReport[ArtPollReply.NODE_REPORT_LENGTH - 1] != 0))) {
+            throw new IllegalArgumentException("Node Report has a maximum length of " + ArtPollReply.NODE_REPORT_LENGTH + " Bytes and is 0-terminated.");
         }
-        if (numPorts > 4) {
-            throw new IllegalArgumentException("Maximum Port-Count is 4");
+        if (numPorts > ArtPollReply.MAXIMUM_NUM_PORTS) {
+            throw new IllegalArgumentException("Maximum Port-Count is " + ArtPollReply.MAXIMUM_NUM_PORTS);
         }
-        if (portTypes.length > 4) {
-            throw new IllegalArgumentException("Maximum portTypes.length is 4");
+        if (portTypes.length > ArtPollReply.PORT_TYPES_LENGTH) {
+            throw new IllegalArgumentException("portTypes has a maximum length of " + ArtPollReply.PORT_TYPES_LENGTH + " Bytes.");
         }
-        if (goodInput.length > 4) {
-            throw new IllegalArgumentException("Maximum goodInput.length is 4");
+        if (goodInput.length > ArtPollReply.GOOD_INPUT_LENGTH) {
+            throw new IllegalArgumentException("goodInput has a maximum length of " + ArtPollReply.GOOD_INPUT_LENGTH + " Bytes.");
         }
-        if (goodOutput.length > 4) {
-            throw new IllegalArgumentException("Maximum goodOutput.length is 4");
+        if (goodOutput.length > ArtPollReply.GOOD_OUTPUT_LENGTH) {
+            throw new IllegalArgumentException("goodOutput has a maximum length of " + ArtPollReply.GOOD_OUTPUT_LENGTH + " Bytes.");
         }
-        if (universesIn.length > 4) {
-            throw new IllegalArgumentException("Maximum universesIn.length is 4");
+        if (universesIn.length > ArtPollReply.UNIVERSES_IN_LENGTH) {
+            throw new IllegalArgumentException("universesIn has a maximum length of " + ArtPollReply.UNIVERSES_IN_LENGTH + " Bytes.");
         }
-        if (universesOut.length > 4) {
-            throw new IllegalArgumentException("Maximum universesOut.length is 4");
+        if (universesOut.length > ArtPollReply.UNIVERSES_OUT_LENGTH) {
+            throw new IllegalArgumentException("universesOut has a maximum length of " + ArtPollReply.UNIVERSES_OUT_LENGTH + " Bytes.");
         }
-        if (spare.length > 3) {
-            throw new IllegalArgumentException("Maximum spare.length is 3");
+        if (spare.length > ArtPollReply.SPARE_LENGTH) {
+            throw new IllegalArgumentException("spare has a maximum length of " + ArtPollReply.SPARE_LENGTH + " Bytes.");
         }
-        if (macAddress.length > 6) {
-            throw new IllegalArgumentException("Maximum macAddress.length is 6");
-        }
-        if (filler.length > 26) {
-            throw new IllegalArgumentException("Maximum filler.length is 26");
+        if (macAddress.length > ArtPollReply.MAC_ADDRESS_LENGTH) {
+            throw new IllegalArgumentException("macAddress has a maximum length of " + ArtPollReply.MAC_ADDRESS_LENGTH + " Bytes.");
         }
 
-        final byte[] result = _ArtNetPacket.constructUnversionedPacket(ArtPollReply.PACKET_LENGTH, ArtNetOpCodes.OP_CODE_POLL_REPLY);
+        final byte[] result = _ArtNetPacket.constructUnversionedPacket(ArtPollReply.START_FILLER + filler.length, ArtNetOpCodes.OP_CODE_POLL_REPLY);
 
-        ByteArrayToolkit.set4BytesHighToLow(ipAddress, result, _ArtNetPacket.SHORT_HEADER_LENGTH);
-        ByteArrayToolkit.set2BytesLowToHigh(port, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 4);
-        ByteArrayToolkit.set2BytesHighToLow(versionInfo, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 6);
-        result[_ArtNetPacket.SHORT_HEADER_LENGTH + 8] = (byte) (net & 0x7f);
-        result[_ArtNetPacket.SHORT_HEADER_LENGTH + 9] = (byte) (subNet & 0x0f);
-        ByteArrayToolkit.set2BytesHighToLow(oem, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 10);
-        result[_ArtNetPacket.SHORT_HEADER_LENGTH + 12] = ubea;
-        result[_ArtNetPacket.SHORT_HEADER_LENGTH + 13] = status1;
-        ByteArrayToolkit.set2BytesLowToHigh(estaManufacturer, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 14);
-        ByteArrayToolkit.setBytes(shortName, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 16);
-        ByteArrayToolkit.setBytes(longName, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 34);
-        ByteArrayToolkit.setBytes(nodeReport, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 98);
-        ByteArrayToolkit.set2BytesHighToLow(numPorts, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 162);
-        ByteArrayToolkit.setBytes(portTypes, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 164);
-        ByteArrayToolkit.setBytes(goodInput, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 168);
-        ByteArrayToolkit.setBytes(goodOutput, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 172);
-        ByteArrayToolkit.setBytes(universesIn, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 176);
-        ByteArrayToolkit.setBytes(universesOut, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 180);
-        result[_ArtNetPacket.SHORT_HEADER_LENGTH + 184] = video;
-        result[_ArtNetPacket.SHORT_HEADER_LENGTH + 185] = macro;
-        result[_ArtNetPacket.SHORT_HEADER_LENGTH + 186] = remote;
-        ByteArrayToolkit.setBytes(spare, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 187);
-        result[_ArtNetPacket.SHORT_HEADER_LENGTH + 190] = style;
-        ByteArrayToolkit.setBytes(macAddress, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 191);
-        ByteArrayToolkit.set4BytesHighToLow(bindIP, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 197);
-        result[_ArtNetPacket.SHORT_HEADER_LENGTH + 201] = bindIndex;
-        result[_ArtNetPacket.SHORT_HEADER_LENGTH + 202] = status2;
-        ByteArrayToolkit.setBytes(filler, result, _ArtNetPacket.SHORT_HEADER_LENGTH + 203);
+        ByteArrayToolkit.set4BytesHighToLow(ipAddress, result, ArtPollReply.START_IP_ADDRESS);
+        ByteArrayToolkit.set2BytesLowToHigh(port, result, ArtPollReply.START_PORT);
+        ByteArrayToolkit.set2BytesHighToLow(versionInfo, result, ArtPollReply.START_VERSION_INFO);
+        result[ArtPollReply.START_NET] = (byte) (net & ArtNetToolkit.MAX_NET);
+        result[ArtPollReply.START_SUB_NET] = (byte) (subNet & ArtNetToolkit.MAX_SUB_NET);
+        ByteArrayToolkit.set2BytesHighToLow(oem, result, ArtPollReply.START_OEM);
+        result[ArtPollReply.START_UBEA] = ubea;
+        result[ArtPollReply.START_STATUS1] = status1;
+        ByteArrayToolkit.set2BytesLowToHigh(estaManufacturer, result, ArtPollReply.START_ESTA_MANUFACTURER);
+        ByteArrayToolkit.setBytes(shortName, result, ArtPollReply.START_SHORT_NAME);
+        ByteArrayToolkit.setBytes(longName, result, ArtPollReply.START_LONG_NAME);
+        ByteArrayToolkit.setBytes(nodeReport, result, ArtPollReply.START_NODE_REPORT);
+        ByteArrayToolkit.set2BytesHighToLow(numPorts, result, ArtPollReply.START_NUM_PORTS);
+        ByteArrayToolkit.setBytes(portTypes, result, ArtPollReply.START_PORT_TYPES);
+        ByteArrayToolkit.setBytes(goodInput, result, ArtPollReply.START_GOOD_INPUT);
+        ByteArrayToolkit.setBytes(goodOutput, result, ArtPollReply.START_GOOD_OUTPUT);
+        ByteArrayToolkit.setBytes(universesIn, result, ArtPollReply.START_UNIVERSES_IN);
+        ByteArrayToolkit.setBytes(universesOut, result, ArtPollReply.START_UNIVERSES_OUT);
+        result[ArtPollReply.START_VIDEO] = video;
+        result[ArtPollReply.START_MACRO] = macro;
+        result[ArtPollReply.START_REMOTE] = remote;
+        ByteArrayToolkit.setBytes(spare, result, ArtPollReply.START_SPARE);
+        result[ArtPollReply.START_STYLE] = style;
+        ByteArrayToolkit.setBytes(macAddress, result, ArtPollReply.START_MAC_ADDRESS);
+        ByteArrayToolkit.set4BytesHighToLow(bindIP, result, ArtPollReply.START_BIND_IP);
+        result[ArtPollReply.START_BIND_INDEX] = bindIndex;
+        result[ArtPollReply.START_STATUS2] = status2;
+        ByteArrayToolkit.setBytes(filler, result, ArtPollReply.START_FILLER);
         return result;
     }
 
     public ArtPollReply(final byte[] data) {
         super(data);
-        if (data.length < ArtPoll.PACKET_LENGTH) {
-            throw new IllegalArgumentException("Minimum size for ArtPollReply is " + ArtPollReply.PACKET_LENGTH);
+        if (data.length < ArtPollReply.MINIMUM_PACKET_LENGTH) {
+            throw new IllegalArgumentException("Minimum size for ArtPollReply is " + ArtPollReply.MINIMUM_PACKET_LENGTH);
         }
         if (this.getOpCode() != ArtNetOpCodes.OP_CODE_POLL_REPLY) {
             throw new IllegalArgumentException("Provided data specifies a wrong OpCode");
         }
 
-        this.ipAddress = ByteArrayToolkit.get4BytesHighToLow(data, _ArtNetPacket.SHORT_HEADER_LENGTH);
-        this.port = ByteArrayToolkit.get2BytesLowToHigh(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 4);
-        this.versionInfo = ByteArrayToolkit.get2BytesHighToLow(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 6);
-        this.net = (byte) (data[_ArtNetPacket.SHORT_HEADER_LENGTH + 8] & 0x7f);
-        this.subNet = (byte) (data[_ArtNetPacket.SHORT_HEADER_LENGTH + 9] & 0x0f);
-        this.oem = ByteArrayToolkit.get2BytesHighToLow(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 10);
-        this.ubea = data[_ArtNetPacket.SHORT_HEADER_LENGTH + 12];
-        this.status1 = data[_ArtNetPacket.SHORT_HEADER_LENGTH + 13];
-        this.estaManufacturer = ByteArrayToolkit.get2BytesLowToHigh(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 14);
-        this.shortName = ByteArrayToolkit.getString(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 16, 17);
-        this.longName = ByteArrayToolkit.getString(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 34, 63);
-        this.nodeReport = ByteArrayToolkit.getString(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 98, 63);
-        this.numPorts = ByteArrayToolkit.get2BytesHighToLow(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 162);
-        this.portTypes = ByteArrayToolkit.getBytes(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 164, 4);
-        this.goodInput = ByteArrayToolkit.getBytes(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 168, 4);
-        this.goodOutput = ByteArrayToolkit.getBytes(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 172, 4);
-        this.universesIn = ByteArrayToolkit.getBytes(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 176, 4);
-        this.universesOut = ByteArrayToolkit.getBytes(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 180, 4);
-        this.video = data[_ArtNetPacket.SHORT_HEADER_LENGTH + 184];
-        this.macro = data[_ArtNetPacket.SHORT_HEADER_LENGTH + 185];
-        this.remote = data[_ArtNetPacket.SHORT_HEADER_LENGTH + 186];
-        this.spare = ByteArrayToolkit.getBytes(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 187, 3);
-        this.style = data[_ArtNetPacket.SHORT_HEADER_LENGTH + 190];
-        this.macAddress = ByteArrayToolkit.getBytes(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 191, 6);
-        if (data.length > (_ArtNetPacket.SHORT_HEADER_LENGTH + 201)) {
-            this.bindIP = ByteArrayToolkit.get4BytesHighToLow(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 197);
-            this.bindIndex = data[_ArtNetPacket.SHORT_HEADER_LENGTH + 201];
+        this.ipAddress = ByteArrayToolkit.get4BytesHighToLow(data, ArtPollReply.START_IP_ADDRESS);
+        this.port = ByteArrayToolkit.get2BytesLowToHigh(data, ArtPollReply.START_PORT);
+        this.versionInfo = ByteArrayToolkit.get2BytesHighToLow(data, ArtPollReply.START_VERSION_INFO);
+        this.net = (byte) (data[ArtPollReply.START_NET] & ArtNetToolkit.MAX_NET);
+        this.subNet = (byte) (data[ArtPollReply.START_SUB_NET] & ArtNetToolkit.MAX_SUB_NET);
+        this.oem = ByteArrayToolkit.get2BytesHighToLow(data, ArtPollReply.START_OEM);
+        this.ubea = data[ArtPollReply.START_UBEA];
+        this.status1 = data[ArtPollReply.START_STATUS1];
+        this.estaManufacturer = ByteArrayToolkit.get2BytesLowToHigh(data, ArtPollReply.START_ESTA_MANUFACTURER);
+        this.shortName = ByteArrayToolkit.getString(data, ArtPollReply.START_SHORT_NAME, _ArtNetPacket.SHORT_NAME_LENGTH);
+        this.longName = ByteArrayToolkit.getString(data, ArtPollReply.START_LONG_NAME, _ArtNetPacket.LONG_NAME_LENGTH);
+        this.nodeReport = ByteArrayToolkit.getString(data, ArtPollReply.START_NODE_REPORT, ArtPollReply.NODE_REPORT_LENGTH);
+        this.numPorts = ByteArrayToolkit.get2BytesHighToLow(data, ArtPollReply.START_NUM_PORTS);
+        this.portTypes = ByteArrayToolkit.getBytes(data, ArtPollReply.START_PORT_TYPES, ArtPollReply.PORT_TYPES_LENGTH);
+        this.goodInput = ByteArrayToolkit.getBytes(data, ArtPollReply.START_GOOD_INPUT, ArtPollReply.GOOD_INPUT_LENGTH);
+        this.goodOutput = ByteArrayToolkit.getBytes(data, ArtPollReply.START_GOOD_OUTPUT, ArtPollReply.GOOD_OUTPUT_LENGTH);
+        this.universesIn = ByteArrayToolkit.getBytes(data, ArtPollReply.START_UNIVERSES_IN, ArtPollReply.UNIVERSES_IN_LENGTH);
+        this.universesOut = ByteArrayToolkit.getBytes(data, ArtPollReply.START_UNIVERSES_OUT, ArtPollReply.UNIVERSES_OUT_LENGTH);
+        this.video = data[ArtPollReply.START_VIDEO];
+        this.macro = data[ArtPollReply.START_MACRO];
+        this.remote = data[ArtPollReply.START_REMOTE];
+        this.spare = ByteArrayToolkit.getBytes(data, ArtPollReply.START_SPARE, ArtPollReply.SPARE_LENGTH);
+        this.style = data[ArtPollReply.START_STYLE];
+        this.macAddress = ByteArrayToolkit.getBytes(data, ArtPollReply.START_MAC_ADDRESS, ArtPollReply.MAC_ADDRESS_LENGTH);
+        if (data.length > ArtPollReply.START_BIND_INDEX) {
+            this.bindIP = ByteArrayToolkit.get4BytesHighToLow(data, ArtPollReply.START_BIND_IP);
+            this.bindIndex = data[ArtPollReply.START_BIND_INDEX];
         } else {
             this.bindIP = 0;
             this.bindIndex = 0;
         }
-        if (data.length > (_ArtNetPacket.SHORT_HEADER_LENGTH + 202)) {
-            this.status2 = data[_ArtNetPacket.SHORT_HEADER_LENGTH + 202];
+        if (data.length > ArtPollReply.START_STATUS2) {
+            this.status2 = data[ArtPollReply.START_STATUS2];
         } else {
             this.status2 = 0;
         }
-        if (data.length > (_ArtNetPacket.SHORT_HEADER_LENGTH + 203)) {
-            this.filler = ByteArrayToolkit.getBytes(data, _ArtNetPacket.SHORT_HEADER_LENGTH + 203);
+        if (data.length > ArtPollReply.START_FILLER) {
+            this.filler = ByteArrayToolkit.getBytes(data, ArtPollReply.START_FILLER);
         } else {
             this.filler = new byte[0];
         }
 
         // Old specification is that high and low nibble are to be the same, but we only need the information once.
         for (int i = 0; i < 4; i++) {
-            this.universesIn[i] = (byte) (this.universesIn[i] & 0xf);
-            this.universesOut[i] = (byte) (this.universesOut[i] & 0xf);
+            this.universesIn[i] = (byte) (this.universesIn[i] & ArtNetToolkit.MAX_UNIVERSE);
+            this.universesOut[i] = (byte) (this.universesOut[i] & ArtNetToolkit.MAX_UNIVERSE);
         }
     }
 

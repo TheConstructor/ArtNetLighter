@@ -25,7 +25,13 @@ import java.util.Arrays;
  * Implements ArtInput packet.
  */
 public class ArtInput extends _VersionedArtNetPacket {
-    public static final int PACKET_LENGTH = _VersionedArtNetPacket.FULL_HEADER_LENGTH + 8;
+    private static final int START_FILLER1 = _VersionedArtNetPacket.FULL_HEADER_LENGTH;
+    private static final int START_FILLER2 = ArtInput.START_FILLER1 + 1;
+    private static final int START_NUM_PORTS = ArtInput.START_FILLER2 + 1;
+    private static final int START_INPUT = ArtInput.START_NUM_PORTS + 2;
+
+    public static final int PACKET_LENGTH = ArtInput.START_INPUT + 4;
+
     /**
      * 1 Byte Filler1.
      */
@@ -38,8 +44,7 @@ public class ArtInput extends _VersionedArtNetPacket {
 
     /**
      * 2 Byte NumPorts. (High-Byte first)
-     * If number of inputs is not equal
-     * to number of outputs, the largest value is taken. The maximum value is 4.
+     * If number of inputs is not equal to number of outputs, the largest value is taken. The maximum value is 4.
      */
     private final int numPorts;
 
@@ -88,10 +93,10 @@ public class ArtInput extends _VersionedArtNetPacket {
 
     public static byte[] constructPacket(final byte filler1, final byte filler2, final int numPorts, final byte[] input) {
         final byte[] pData = _VersionedArtNetPacket.constructPacket(ArtInput.PACKET_LENGTH, ArtNetOpCodes.OP_CODE_INPUT);
-        pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH] = filler1;
-        pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 1] = filler2;
-        ByteArrayToolkit.set2BytesHighToLow(numPorts, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 2);
-        ByteArrayToolkit.setBytes(input, pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 4);
+        pData[ArtInput.START_FILLER1] = filler1;
+        pData[ArtInput.START_FILLER2] = filler2;
+        ByteArrayToolkit.set2BytesHighToLow(numPorts, pData, ArtInput.START_NUM_PORTS);
+        ByteArrayToolkit.setBytes(input, pData, ArtInput.START_INPUT);
         return pData;
     }
 
@@ -103,10 +108,10 @@ public class ArtInput extends _VersionedArtNetPacket {
         if (pData.length < ArtInput.PACKET_LENGTH) {
             throw new IllegalArgumentException("Packet needs to be at least " + ArtInput.PACKET_LENGTH + " bytes");
         }
-        this.filler1 = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH];
-        this.filler2 = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 1];
-        this.numPorts = ByteArrayToolkit.get2BytesHighToLow(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 2);
-        this.input = ByteArrayToolkit.getBytes(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 4);
+        this.filler1 = pData[ArtInput.START_FILLER1];
+        this.filler2 = pData[ArtInput.START_FILLER2];
+        this.numPorts = ByteArrayToolkit.get2BytesHighToLow(pData, ArtInput.START_NUM_PORTS);
+        this.input = ByteArrayToolkit.getBytes(pData, ArtInput.START_INPUT);
     }
 
     @Override

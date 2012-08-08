@@ -17,6 +17,7 @@
 package tc.vom.artNetLighter.infrastructure.packets;
 
 
+import tc.vom.artNetLighter.infrastructure.BinaryToolkit;
 import tc.vom.artNetLighter.infrastructure.ByteArrayToolkit;
 import tc.vom.artNetLighter.infrastructure.constants.ArtNetOpCodes;
 
@@ -26,7 +27,16 @@ import java.util.Arrays;
  * Used to hold the data of an ArtDmx-Packet. Approximately every 4 Seconds all DMX-Values should be retransmitted.
  */
 public class ArtDmx extends _VersionedArtNetPacket {
+    public static final int MAXIMUM_DATA_LENGTH = 512;
+
+    private static final int START_SEQUENCE = _VersionedArtNetPacket.FULL_HEADER_LENGTH;
+    private static final int START_PHYSICAL = ArtDmx.START_SEQUENCE + 1;
+    private static final int START_PORT_ADDRESS = ArtDmx.START_PHYSICAL + 1;
+    private static final int START_LENGTH = ArtDmx.START_PORT_ADDRESS + 2;
+    private static final int START_DATA = ArtDmx.START_LENGTH + 2;
+
     public static final int MINIMUM_PACKET_SIZE = _VersionedArtNetPacket.FULL_HEADER_LENGTH + 6;
+
     /**
      * 1 Byte Sequence.
      * The sequence number is used to ensure that ArtDmx packets are used in the correct order. When Art-Net is carried over a medium such as the Internet, it is possible that ArtDmx packets will reach the receiver out of order.
@@ -88,7 +98,7 @@ public class ArtDmx extends _VersionedArtNetPacket {
     }
 
     public int getData(final int i) {
-        return (this.data[i] & 0xff);
+        return BinaryToolkit.getUnsignedValue(this.data[i]);
     }
 
     @Override
@@ -97,28 +107,31 @@ public class ArtDmx extends _VersionedArtNetPacket {
     }
 
     public static byte[] constructPacket(final byte sequence, final byte physical, final int portAddress, final byte[] data) {
+        if (data.length > ArtDmx.MAXIMUM_DATA_LENGTH) {
+            throw new IllegalArgumentException("data has a maximum length of " + ArtDmx.MAXIMUM_DATA_LENGTH + " Bytes.");
+        }
         final byte[] result = _VersionedArtNetPacket.constructPacket(ArtDmx.MINIMUM_PACKET_SIZE + data.length, ArtNetOpCodes.OP_CODE_DMX);
-        result[_VersionedArtNetPacket.FULL_HEADER_LENGTH] = sequence;
-        result[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 1] = physical;
-        ByteArrayToolkit.set2BytesLowToHigh(portAddress, result, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 2);
-        ByteArrayToolkit.set2BytesHighToLow(data.length, result, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 4);
-        ByteArrayToolkit.setBytes(data, result, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 6);
+        result[ArtDmx.START_SEQUENCE] = sequence;
+        result[ArtDmx.START_PHYSICAL] = physical;
+        ByteArrayToolkit.set2BytesLowToHigh(portAddress, result, ArtDmx.START_PORT_ADDRESS);
+        ByteArrayToolkit.set2BytesHighToLow(data.length, result, ArtDmx.START_LENGTH);
+        ByteArrayToolkit.setBytes(data, result, ArtDmx.START_DATA);
         return result;
     }
 
     public ArtDmx(final byte[] pData) {
         super(pData);
-        if (pData.length < ArtPoll.PACKET_LENGTH) {
+        if (pData.length < ArtDmx.MINIMUM_PACKET_SIZE) {
             throw new IllegalArgumentException("Minimum size for ArtDmx is " + ArtDmx.MINIMUM_PACKET_SIZE);
         }
         if (this.getOpCode() != ArtNetOpCodes.OP_CODE_DMX) {
             throw new IllegalArgumentException("Provided data specifies a wrong OpCode");
         }
-        this.sequence = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH];
-        this.physical = pData[_VersionedArtNetPacket.FULL_HEADER_LENGTH + 1];
-        this.portAddress = ByteArrayToolkit.get2BytesLowToHigh(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 2);
-        this.length = ByteArrayToolkit.get2BytesHighToLow(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 4);
-        this.data = ByteArrayToolkit.getBytes(pData, _VersionedArtNetPacket.FULL_HEADER_LENGTH + 6, this.length);
+        this.sequence = pData[ArtDmx.START_SEQUENCE];
+        this.physical = pData[ArtDmx.START_PHYSICAL];
+        this.portAddress = ByteArrayToolkit.get2BytesLowToHigh(pData, ArtDmx.START_PORT_ADDRESS);
+        this.length = ByteArrayToolkit.get2BytesHighToLow(pData, ArtDmx.START_LENGTH);
+        this.data = ByteArrayToolkit.getBytes(pData, ArtDmx.START_DATA, this.length);
     }
 
     @Override
