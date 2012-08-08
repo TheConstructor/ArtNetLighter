@@ -42,7 +42,7 @@ public class BinaryToolkit {
     public static boolean isBitSet(final int input, final int bit) {
         assert bit >= 0;
         assert bit <= 7;
-        return (input & (1 << bit)) == 1;
+        return (input & (1 << bit)) != 0;
     }
 
     public static int setBit(final int input, final int bit) {
@@ -72,10 +72,13 @@ public class BinaryToolkit {
         return input | mask;
     }
 
+    /*
+    Untested - should work, but is currently not needed.
     public static int setBits(final int input, final int bits, final int lower, final int upper) {
         final int mask = BinaryToolkit.generateBitRangeMask(lower, upper);
         return (input & (~mask)) | (bits & mask);
     }
+    */
 
     public static int unsetBits(final int input, final int lower, final int upper) {
         final int mask = BinaryToolkit.generateBitRangeMask(lower, upper);
